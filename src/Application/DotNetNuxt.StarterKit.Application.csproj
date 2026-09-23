@@ -1,1 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.19.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Entities\DotNetNuxt.StarterKit.Entities.csproj" />
+  </ItemGroup>
+</Project>
