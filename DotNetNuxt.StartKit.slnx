@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Entities/">
+    <Project Path="src/Entities/DotNetNuxt.StarterKit.Entities.csproj" />
+  </Folder>
+</Solution>
