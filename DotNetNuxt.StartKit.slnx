@@ -1,5 +1,8 @@
 <Solution>
   <Folder Name="/src/" />
+  <Folder Name="/src/Application/">
+    <Project Path="src/Application/DotNetNuxt.StarterKit.Application.csproj" />
+  </Folder>
   <Folder Name="/src/Entities/">
     <Project Path="src/Entities/DotNetNuxt.StarterKit.Entities.csproj" />
   </Folder>
