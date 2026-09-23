@@ -16,4 +16,8 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Application\DotNetNuxt.StarterKit.Application.csproj" />
+  </ItemGroup>
+
 </Project>
