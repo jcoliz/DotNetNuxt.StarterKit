@@ -24,7 +24,7 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
     /// <param name="offset">Number of days from today to start listing forecasts</param>
     /// <param name="count">Number of forecasts to include</param>
     /// <returns>Recent forecasts</returns>
-    public async Task<WeatherForecast[]> ListForecasts(int offset = 0, int count = 5)
+    public async Task<IReadOnlyCollection<WeatherForecast>> ListForecasts(int offset = 0, int count = 5)
     {
         using var activity = _activitySource.StartActivity(nameof(ListForecasts), ActivityKind.Server);
 
@@ -51,7 +51,7 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
                 }
             }
 
-            return [.. requestedDates.Select(date => forecastByDate[date])];
+            return requestedDates.Select(date => forecastByDate[date]).ToList();
         }
         catch (Exception ex)
         {

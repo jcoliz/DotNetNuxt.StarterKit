@@ -30,7 +30,7 @@ public class WeatherForecastFeatureTests
 
         var result = await feature.ListForecasts(offset: -1, count: 10);
 
-        Assert.That(result, Has.Length.EqualTo(10));
+        Assert.That(result, Has.Count.EqualTo(10));
         Assert.That(result.Select(forecast => forecast.Summary), Is.EqualTo(
             Enumerable.Range(0, 10).Select(index => $"Forecast {index}")));
     }
@@ -47,9 +47,9 @@ public class WeatherForecastFeatureTests
 
         var result = await feature.ListForecasts(count: 3);
 
-        Assert.That(result, Has.Length.EqualTo(3));
+        Assert.That(result, Has.Count.EqualTo(3));
         Assert.That(result.Select(forecast => forecast.Date), Is.EqualTo(new[] { start, start.AddDays(1), start.AddDays(2) }));
-        Assert.That(result[1], Is.EqualTo(existing));
+        Assert.That(result.First(), Is.EqualTo(existing));
         Assert.That(provider.Added.Select(forecast => forecast.Date), Is.EqualTo(new[] { start, start.AddDays(2) }));
         Assert.That(provider.SaveChangesCallCount, Is.EqualTo(1));
     }
