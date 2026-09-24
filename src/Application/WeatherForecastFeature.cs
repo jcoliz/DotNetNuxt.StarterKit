@@ -20,15 +20,18 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
     /// <summary>
     /// List recent forecasts
     /// </summary>
+    /// <param name="offset">Number of days from today to start listing forecasts</param>
+    /// <param name="count">Number of forecasts to include</param>
     /// <returns>Recent forecasts</returns>
-    public async Task<WeatherForecast[]> ListForecasts()
+    public async Task<WeatherForecast[]> ListForecasts(int offset = 0, int count = 5)
     {
         using var activity = _activitySource.StartActivity(nameof(ListForecasts), ActivityKind.Server);
 
         try
         {
-            var yesterday = timeProvider.GetUtcNow() - TimeSpan.FromDays(1);
-            var query = dataProvider.Get<WeatherForecast>().Where(x => x.Date >= yesterday).OrderBy(x => x.Date).Take(10);
+            var now = timeProvider.GetUtcNow();
+            var start = new DateTimeOffset(now.Date, now.Offset).AddDays(offset);
+            var query = dataProvider.Get<WeatherForecast>().Where(x => x.Date >= start).OrderBy(x => x.Date).Take(count);
 
             var forecasts = await dataProvider.ToListNoTrackingAsync(query);
 

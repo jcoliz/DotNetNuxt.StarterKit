@@ -13,25 +13,26 @@ namespace DotNetNuxt.Tests.Unit;
 public class WeatherForecastFeatureTests
 {
     [Test]
-    public async Task ListForecasts_returns_recent_forecasts_in_date_order_and_limits_results()
+    public async Task ListForecasts_starts_at_offset_date_returns_in_date_order_and_limits_results()
     {
         var now = new DateTimeOffset(2026, 9, 23, 12, 0, 0, TimeSpan.Zero);
+        var start = new DateTimeOffset(now.Date, now.Offset).AddDays(-1);
         var forecasts = Enumerable.Range(0, 12)
             .Select(index => new WeatherForecast
             {
-                Date = now.AddHours(-index),
+                Date = start.AddHours(index),
                 Summary = $"Forecast {index}"
             })
-            .Append(new WeatherForecast { Date = now.AddDays(-2), Summary = "Too old" })
+            .Append(new WeatherForecast { Date = start.AddTicks(-1), Summary = "Too old" })
             .Reverse()
             .ToList();
         var feature = new WeatherForecastFeature(new FakeDataProvider(forecasts), new FakeTimeProvider(now));
 
-        var result = await feature.ListForecasts();
+        var result = await feature.ListForecasts(offset: -1, count: 10);
 
         Assert.That(result, Has.Length.EqualTo(10));
         Assert.That(result.Select(forecast => forecast.Summary), Is.EqualTo(
-            Enumerable.Range(2, 10).Reverse().Select(index => $"Forecast {index}")));
+            Enumerable.Range(0, 10).Select(index => $"Forecast {index}")));
     }
 
     [Test]
