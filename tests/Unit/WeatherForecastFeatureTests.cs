@@ -20,10 +20,10 @@ public class WeatherForecastFeatureTests
         var forecasts = Enumerable.Range(0, 12)
             .Select(index => new WeatherForecast
             {
-                Date = start.AddHours(index),
+                Date = start.AddDays(index),
                 Summary = $"Forecast {index}"
             })
-            .Append(new WeatherForecast { Date = start.AddTicks(-1), Summary = "Too old" })
+            .Append(new WeatherForecast { Date = start.AddDays(-1), Summary = "Too old" })
             .Reverse()
             .ToList();
         var feature = new WeatherForecastFeature(new FakeDataProvider(forecasts), new FakeTimeProvider(now));
@@ -33,6 +33,25 @@ public class WeatherForecastFeatureTests
         Assert.That(result, Has.Length.EqualTo(10));
         Assert.That(result.Select(forecast => forecast.Summary), Is.EqualTo(
             Enumerable.Range(0, 10).Select(index => $"Forecast {index}")));
+    }
+
+    [Test]
+    public async Task ListForecasts_generates_and_stores_missing_forecasts()
+    {
+        var now = new DateTimeOffset(2026, 9, 23, 12, 0, 0, TimeSpan.Zero);
+        var start = new DateTimeOffset(now.Date, now.Offset);
+        var existing = new WeatherForecast { Date = start.AddDays(1), TemperatureF = 50, Summary = "Existing" };
+        var outsideRequestedRange = new WeatherForecast { Date = start.AddDays(10), TemperatureF = 60, Summary = "Later" };
+        var provider = new FakeDataProvider([existing, outsideRequestedRange]);
+        var feature = new WeatherForecastFeature(provider, new FakeTimeProvider(now));
+
+        var result = await feature.ListForecasts(count: 3);
+
+        Assert.That(result, Has.Length.EqualTo(3));
+        Assert.That(result.Select(forecast => forecast.Date), Is.EqualTo(new[] { start, start.AddDays(1), start.AddDays(2) }));
+        Assert.That(result[1], Is.EqualTo(existing));
+        Assert.That(provider.Added.Select(forecast => forecast.Date), Is.EqualTo(new[] { start, start.AddDays(2) }));
+        Assert.That(provider.SaveChangesCallCount, Is.EqualTo(1));
     }
 
     [Test]

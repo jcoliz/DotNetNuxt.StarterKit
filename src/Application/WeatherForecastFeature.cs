@@ -16,6 +16,7 @@ namespace DotNetNuxt.StarterKit.Application;
 public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider timeProvider)
 {
     private static readonly ActivitySource _activitySource = new(nameof(WeatherForecastFeature));
+    private static readonly string[] Summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
     /// <summary>
     /// List recent forecasts
@@ -31,11 +32,26 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
         {
             var now = timeProvider.GetUtcNow();
             var start = new DateTimeOffset(now.Date, now.Offset).AddDays(offset);
-            var query = dataProvider.Get<WeatherForecast>().Where(x => x.Date >= start).OrderBy(x => x.Date).Take(count);
+            var requestedDates = Enumerable.Range(0, count).Select(day => start.AddDays(day)).ToArray();
+            var requestedDateSet = requestedDates.ToHashSet();
+            var query = dataProvider.Get<WeatherForecast>().Where(x => requestedDateSet.Contains(x.Date)).OrderBy(x => x.Date);
 
             var forecasts = await dataProvider.ToListNoTrackingAsync(query);
+            var forecastByDate = forecasts.GroupBy(x => x.Date).ToDictionary(x => x.Key, x => x.First());
+            var missing = requestedDates.Where(date => !forecastByDate.ContainsKey(date)).Select(CreateFakeForecast).ToArray();
 
-            return [.. forecasts];
+            if (missing.Length > 0)
+            {
+                dataProvider.AddRange(missing);
+                await dataProvider.SaveChangesAsync();
+
+                foreach (var forecast in missing)
+                {
+                    forecastByDate[forecast.Date] = forecast;
+                }
+            }
+
+            return [.. requestedDates.Select(date => forecastByDate[date])];
         }
         catch (Exception ex)
         {
@@ -43,6 +59,14 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
             throw;
         }
     }
+
+    private static WeatherForecast CreateFakeForecast(DateTimeOffset date)
+        => new()
+        {
+            Date = date,
+            Summary = Summaries[date.DayOfYear % Summaries.Length],
+            TemperatureF = 20 + (date.DayOfYear * 17 % 85)
+        };
 
     /// <summary>
     /// Update stored forecasts to match supplied forecasts
