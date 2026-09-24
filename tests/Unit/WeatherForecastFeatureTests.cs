@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DotNetNuxt.StarterKit.Application;
 using DotNetNuxt.StarterKit.Entities.Abstractions;
 using DotNetNuxt.StarterKit.Entities.Models;
+using Microsoft.Extensions.Time.Testing;
 
 namespace DotNetNuxt.Tests.Unit;
 
@@ -14,7 +15,7 @@ public class WeatherForecastFeatureTests
     [Test]
     public async Task ListForecasts_returns_recent_forecasts_in_date_order_and_limits_results()
     {
-        var now = DateTimeOffset.UtcNow;
+        var now = new DateTimeOffset(2026, 9, 23, 12, 0, 0, TimeSpan.Zero);
         var forecasts = Enumerable.Range(0, 12)
             .Select(index => new WeatherForecast
             {
@@ -24,7 +25,7 @@ public class WeatherForecastFeatureTests
             .Append(new WeatherForecast { Date = now.AddDays(-2), Summary = "Too old" })
             .Reverse()
             .ToList();
-        var feature = new WeatherForecastFeature(new FakeDataProvider(forecasts));
+        var feature = new WeatherForecastFeature(new FakeDataProvider(forecasts), new FakeTimeProvider(now));
 
         var result = await feature.ListForecasts();
 
@@ -40,7 +41,7 @@ public class WeatherForecastFeatureTests
         var newDate = DateTimeOffset.UtcNow;
         var existing = new WeatherForecast { Id = 7, Date = existingDate, TemperatureF = 50, Summary = "Old" };
         var provider = new FakeDataProvider([existing]);
-        var feature = new WeatherForecastFeature(provider);
+        var feature = new WeatherForecastFeature(provider, new FakeTimeProvider(newDate));
 
         var result = await feature.UpdateForecasts([
             new WeatherForecast { Date = existingDate, TemperatureF = 65, Summary = "Updated" },

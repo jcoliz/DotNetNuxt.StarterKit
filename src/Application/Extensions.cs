@@ -1,4 +1,5 @@
-﻿using DotNetNuxt.StarterKit.Application;
+﻿using System;
+using DotNetNuxt.StarterKit.Application;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ public static class ApplicationFeaturesExtensions
     /// <returns></returns>
     public static IServiceCollection AddApplicationFeatures(this IServiceCollection services)
     {
+        services.AddSingleton(TimeProvider.System);
         services.AddScoped<WeatherForecastFeature>();
 
         return services;

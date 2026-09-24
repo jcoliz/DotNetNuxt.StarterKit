@@ -12,7 +12,8 @@ namespace DotNetNuxt.StarterKit.Application;
 /// Application logic to manage weathewr forecasts
 /// </summary>
 /// <param name="dataProvider">Where to retrieve/store data</param>
-public class WeatherForecastFeature(IDataProvider dataProvider)
+/// <param name="timeProvider">Where to retrieve the current date/time</param>
+public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider timeProvider)
 {
     private static readonly ActivitySource _activitySource = new(nameof(WeatherForecastFeature));
 
@@ -26,7 +27,7 @@ public class WeatherForecastFeature(IDataProvider dataProvider)
 
         try
         {
-            var yesterday = DateTime.UtcNow - TimeSpan.FromDays(1);
+            var yesterday = timeProvider.GetUtcNow() - TimeSpan.FromDays(1);
             var query = dataProvider.Get<WeatherForecast>().Where(x => x.Date >= yesterday).OrderBy(x => x.Date).Take(10);
 
             var forecasts = await dataProvider.ToListNoTrackingAsync(query);
