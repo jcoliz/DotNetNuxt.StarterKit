@@ -31,11 +31,14 @@ are applied by deployment pipeline scripts.
 
 Again, we don't normally need to migrate the database manually.
 That said, if we want to see what the migrations script looks like, we can
-create one:
+create one using the helper script from the repository root:
 
 ```Powershell
-dotnet ef migrations script --project .\src\Data\Postgres\ --startup-project .\tools\Postgres.MigrationsMain\ --context ApplicationDbContext -i -o out\postgres-migration.sql
+.\scripts\Export-PostgresMigration.ps1
 ```
+
+This is the same command the CD pipeline runs to publish the migration as an
+artifact (see `.azure/pipelines/steps/publish/publish-postgres-migration.yaml`).
 
 ## Never EnsureCreated
 
