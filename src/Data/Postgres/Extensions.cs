@@ -1,6 +1,7 @@
 using Azure.Core;
 using Azure.Identity;
 using DotNetNuxt.StarterKit.Data;
+using DotNetNuxt.StarterKit.Entities.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -59,6 +60,10 @@ public static class DatabaseServiceExtensions
                 options.UseNpgsql(connectionString));
             logger.LogInformation("Using Postgres with connection string auth");
         }
+
+        // Expose the context through the storage-agnostic abstraction,
+        // forwarding to the single per-scope ApplicationDbContext instance.
+        services.AddScoped<IDataProvider>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         return services;
     }
