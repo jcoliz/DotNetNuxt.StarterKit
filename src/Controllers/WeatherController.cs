@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DotNetNuxt.StarterKit.Application;
@@ -29,9 +30,11 @@ public partial class WeatherController(WeatherForecastFeature feature, ILogger<W
     [HttpGet()]
     //[Authorize(Policy = "ListRead")]
     [ProducesResponseType(typeof(IReadOnlyCollection<WeatherForecast>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Get(int? offset = null, int? count = null)
+    public async Task<IActionResult> Get(
+        [Range(-30, 30)] int offset = 0, 
+        [Range(1, 60)] int count = 5)
     {
-        var forecasts = await feature.ListForecasts(offset ?? 0, count ?? 5);
+        var forecasts = await feature.ListForecasts(offset, count);
 
         var result = forecasts;
 
