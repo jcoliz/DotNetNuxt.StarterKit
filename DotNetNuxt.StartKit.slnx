@@ -3,6 +3,9 @@
   <Folder Name="/src/Application/">
     <Project Path="src/Application/DotNetNuxt.StarterKit.Application.csproj" />
   </Folder>
+  <Folder Name="/src/BackEnd/">
+    <Project Path="src/BackEnd/DotNetNuxt.StarterKit.BackEnd.csproj" />
+  </Folder>
   <Folder Name="/src/Controllers/">
     <Project Path="src/Controllers/DotNetNuxt.StarterKit.Controllers.csproj" />
   </Folder>
