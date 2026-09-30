@@ -6,6 +6,10 @@
   <Folder Name="/src/Controllers/">
     <Project Path="src/Controllers/DotNetNuxt.StarterKit.Controllers.csproj" />
   </Folder>
+  <Folder Name="/src/Data/" />
+  <Folder Name="/src/Data/Postgres/">
+    <Project Path="src/Data/Postgres/DotNetNuxt.StarterKit.Data.Postgres.csproj" />
+  </Folder>
   <Folder Name="/src/Entities/">
     <Project Path="src/Entities/DotNetNuxt.StarterKit.Entities.csproj" />
   </Folder>
