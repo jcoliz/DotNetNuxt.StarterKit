@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Diagnostics;
@@ -49,6 +50,6 @@ public partial class ArgumentExceptionHandler(
         return true;
     }
 
-    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Handled argument exception")]
-    private partial void LogHandled(Exception exception);
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "{Location}: Handled argument exception")]
+    private partial void LogHandled(Exception exception, [CallerMemberName] string location = "");
 }
