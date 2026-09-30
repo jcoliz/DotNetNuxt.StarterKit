@@ -36,6 +36,50 @@ public class WeatherForecastFeatureTests
     }
 
     [Test]
+    public void ListForecasts_rejects_offset_below_minimum()
+    {
+        var feature = new WeatherForecastFeature(new FakeDataProvider([]), new FakeTimeProvider(DateTimeOffset.UtcNow));
+
+        var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+            () => feature.ListForecasts(offset: -31, count: 1));
+
+        Assert.That(exception.ParamName, Is.EqualTo("offset"));
+    }
+
+    [Test]
+    public void ListForecasts_rejects_count_below_one()
+    {
+        var feature = new WeatherForecastFeature(new FakeDataProvider([]), new FakeTimeProvider(DateTimeOffset.UtcNow));
+
+        var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+            () => feature.ListForecasts(offset: 0, count: 0));
+
+        Assert.That(exception.ParamName, Is.EqualTo("count"));
+    }
+
+    [Test]
+    public void ListForecasts_rejects_count_plus_offset_above_maximum()
+    {
+        var feature = new WeatherForecastFeature(new FakeDataProvider([]), new FakeTimeProvider(DateTimeOffset.UtcNow));
+
+        var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+            () => feature.ListForecasts(offset: 25, count: 6));
+
+        Assert.That(exception.ParamName, Is.EqualTo("count"));
+    }
+
+    [Test]
+    public async Task ListForecasts_allows_boundary_values()
+    {
+        var now = new DateTimeOffset(2026, 9, 23, 12, 0, 0, TimeSpan.Zero);
+        var feature = new WeatherForecastFeature(new FakeDataProvider([]), new FakeTimeProvider(now));
+
+        var result = await feature.ListForecasts(offset: -30, count: 60);
+
+        Assert.That(result, Has.Count.EqualTo(60));
+    }
+
+    [Test]
     public async Task ListForecasts_generates_and_stores_missing_forecasts()
     {
         var now = new DateTimeOffset(2026, 9, 23, 12, 0, 0, TimeSpan.Zero);
@@ -49,7 +93,7 @@ public class WeatherForecastFeatureTests
 
         Assert.That(result, Has.Count.EqualTo(3));
         Assert.That(result.Select(forecast => forecast.Date), Is.EqualTo(new[] { start, start.AddDays(1), start.AddDays(2) }));
-        Assert.That(result.First(), Is.EqualTo(existing));
+        Assert.That(result.ElementAt(1), Is.EqualTo(existing));
         Assert.That(provider.Added.Select(forecast => forecast.Date), Is.EqualTo(new[] { start, start.AddDays(2) }));
         Assert.That(provider.SaveChangesCallCount, Is.EqualTo(1));
     }

@@ -26,6 +26,10 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
     /// <returns>Recent forecasts</returns>
     public async Task<IReadOnlyCollection<WeatherForecast>> ListForecasts(int offset = 0, int count = 5)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(offset, -30, nameof(offset));
+        ArgumentOutOfRangeException.ThrowIfLessThan(count, 1, nameof(count));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(count + offset, 30, nameof(count));
+
         using var activity = _activitySource.StartActivity(nameof(ListForecasts), ActivityKind.Server);
 
         try
