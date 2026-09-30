@@ -47,7 +47,7 @@ try {
     }
 
     Write-Host "Adding migration '$Name' for provider 'Postgres'..." -ForegroundColor Cyan
-    dotnet ef migrations add $Name -o .\Migrations\ -n "DotNetNuxt.StarterKit.Data.Postgres.Migrations" --project ".\src\Data\Postgres\" --startup-project ".\tools\Postgres.MigrationsMain\" --context ApplicationDbContext
+    dotnet ef migrations add $Name -o .\Migrations\ --project ".\src\Data\Postgres\" --startup-project ".\tools\Postgres.MigrationsMain\" --context ApplicationDbContext
     if ($LASTEXITCODE -ne 0) {
         throw "Migration creation failed with exit code $LASTEXITCODE"
     }
