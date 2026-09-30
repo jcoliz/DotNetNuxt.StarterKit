@@ -21,7 +21,7 @@ Creates a new migration named "AddIndexes" for Postgres.
 
 .NOTES
 The migration files will be created in the .\Migrations\ directory of the Postgres project.
-See the Migration README at ../src/Data/Postgres.MigrationsMain/README.md for more information.
+See the Migration README at ../tools/Postgres.MigrationsMain/README.md for more information.
 
 .LINK
 https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/
@@ -47,7 +47,7 @@ try {
     }
 
     Write-Host "Adding migration '$Name' for provider 'Postgres'..." -ForegroundColor Cyan
-    dotnet ef migrations add $Name -o .\Migrations\ -n "DotNetNuxt.StarterKit.Data.Postgres.Migrations" --project ".\src\Data\Postgres\" --startup-project ".\src\Data\Postgres.MigrationsMain\" --context ApplicationDbContext
+    dotnet ef migrations add $Name -o .\Migrations\ -n "DotNetNuxt.StarterKit.Data.Postgres.Migrations" --project ".\src\Data\Postgres\" --startup-project ".\tools\Postgres.MigrationsMain\" --context ApplicationDbContext
     if ($LASTEXITCODE -ne 0) {
         throw "Migration creation failed with exit code $LASTEXITCODE"
     }

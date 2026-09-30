@@ -11,5 +11,5 @@ from the repository root:
 .\scripts\Add-Migration.ps1 -Name "AddWeatherForecasts"
 ```
 
-See [Postgres.MigrationsMain](../Postgres.MigrationsMain/README.md) for details on
+See [Postgres.MigrationsMain](../../../tools/Postgres.MigrationsMain/README.md) for details on
 how migrations are built and applied.

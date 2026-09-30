@@ -34,7 +34,7 @@ That said, if we want to see what the migrations script looks like, we can
 create one:
 
 ```Powershell
-dotnet ef migrations script --project .\src\Data\Postgres\ --startup-project .\src\Data\Postgres.MigrationsMain\ --context ApplicationDbContext -i -o out\postgres-migration.sql
+dotnet ef migrations script --project .\src\Data\Postgres\ --startup-project .\tools\Postgres.MigrationsMain\ --context ApplicationDbContext -i -o out\postgres-migration.sql
 ```
 
 ## Never EnsureCreated

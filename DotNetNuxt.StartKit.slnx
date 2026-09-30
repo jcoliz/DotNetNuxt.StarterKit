@@ -7,9 +7,6 @@
     <Project Path="src/Controllers/DotNetNuxt.StarterKit.Controllers.csproj" />
   </Folder>
   <Folder Name="/src/Data/" />
-  <Folder Name="/src/Data/Postgres.MigrationsMain/">
-    <Project Path="src/Data/Postgres.MigrationsMain/DotNetNuxt.StarterKit.Data.Postgres.MigrationsMain.csproj" />
-  </Folder>
   <Folder Name="/src/Data/Postgres/">
     <Project Path="src/Data/Postgres/DotNetNuxt.StarterKit.Data.Postgres.csproj" />
   </Folder>
@@ -19,5 +16,9 @@
   <Folder Name="/tests/" />
   <Folder Name="/tests/Unit/">
     <Project Path="tests/Unit/DotNetNuxt.Tests.Unit.csproj" />
+  </Folder>
+  <Folder Name="/tools/" />
+  <Folder Name="/tools/Postgres.MigrationsMain/">
+    <Project Path="tools/Postgres.MigrationsMain/DotNetNuxt.StarterKit.Data.Postgres.MigrationsMain.csproj" />
   </Folder>
 </Solution>

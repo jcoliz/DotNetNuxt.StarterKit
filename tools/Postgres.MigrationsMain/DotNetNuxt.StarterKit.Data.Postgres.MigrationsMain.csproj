@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Postgres\DotNetNuxt.StarterKit.Data.Postgres.csproj" />
+    <ProjectReference Include="..\..\src\Data\Postgres\DotNetNuxt.StarterKit.Data.Postgres.csproj" />
   </ItemGroup>
 
 </Project>
