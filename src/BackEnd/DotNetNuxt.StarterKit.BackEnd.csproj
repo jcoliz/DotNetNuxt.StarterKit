@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <PackageReference Include="Alexinea.Extensions.Configuration.Toml" Version="7.0.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="14.7.1" />
   </ItemGroup>
 
@@ -8,5 +9,17 @@
     <ProjectReference Include="..\Controllers\DotNetNuxt.StarterKit.Controllers.csproj" />
     <ProjectReference Include="..\Data\Postgres\DotNetNuxt.StarterKit.Data.Postgres.csproj" />
   </ItemGroup>
+
+  <!-- Set assembly version from SolutionVersion -->
+  <Target Name="SetSolutionVersion" BeforeTargets="GetAssemblyVersion;GenerateAssemblyInfo">
+
+    <!-- Fallback value -->
+    <PropertyGroup>
+      <SolutionVersion Condition="'$(SolutionVersion)' == ''">development</SolutionVersion>
+      <InformationalVersion>$(SolutionVersion)</InformationalVersion>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Using SolutionVersion: $(SolutionVersion)" />
+  </Target>
 
 </Project>
