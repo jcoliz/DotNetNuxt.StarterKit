@@ -1,8 +1,9 @@
 ﻿using System;
+using DotNetNuxt.StarterKit.Entities.Abstractions;
 
 namespace DotNetNuxt.StarterKit.Entities.Models;
 
-public record WeatherForecast
+public record WeatherForecast: IModel
 {
     /// <summary>
     /// Database identifier
