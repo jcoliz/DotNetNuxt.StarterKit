@@ -43,6 +43,8 @@ try
     // TODO: Add Key Vault config source, if configured
     // builder.Configuration.SetupAzureKeyVault(logger);
 
+    builder.SetupVersion(logger);
+
     StartupOptions startupOptions = new();
     builder.Configuration.Bind(StartupOptions.Section, startupOptions);
     builder.Services.Configure<StartupOptions>(builder.Configuration.GetSection(StartupOptions.Section));
@@ -60,8 +62,6 @@ try
     builder.Services.AddApplicationFeatures();
 
     builder.Services.AddSwagger();
-
-    builder.SetupVersion(logger);
 
     builder.Services.AddCorsPolicy(startupOptions.AllowedCorsOrigins);
 
