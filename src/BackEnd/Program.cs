@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 using DotNetNuxt.StarterKit.BackEnd.Startup;
-using DotNetNuxt.StartKit.BackEnd.Options;
+using DotNetNuxt.StarterKit.BackEnd.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,6 +50,8 @@ try
     //
     // Add more services
     //
+
+    builder.AddServiceDefaults();
 
     builder.SetupDatabase(logger);
 

@@ -1,6 +1,6 @@
 // Copyright (C) 2024 James Coliz, Jr. <jcoliz@outlook.com> All rights reserved
 
-namespace DotNetNuxt.StartKit.BackEnd.Options;
+namespace DotNetNuxt.StarterKit.BackEnd.Options;
 
 /// <summary>
 /// Configuration options for program startup

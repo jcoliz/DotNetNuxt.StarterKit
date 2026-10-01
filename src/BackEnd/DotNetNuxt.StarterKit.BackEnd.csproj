@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Controllers\DotNetNuxt.StarterKit.Controllers.csproj" />
     <ProjectReference Include="..\Data\Postgres\DotNetNuxt.StarterKit.Data.Postgres.csproj" />
+    <ProjectReference Include="..\ServiceDefaults\DotNetNuxt.StarterKit.ServiceDefaults.csproj" />
   </ItemGroup>
 
   <!-- Set assembly version from SolutionVersion -->
