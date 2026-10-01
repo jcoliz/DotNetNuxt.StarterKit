@@ -120,6 +120,8 @@ try
 
     app.MapControllers();
 
+    app.MapDefaultEndpoints();
+
     logger.LogInformation("OK");
 
     app.Run();
