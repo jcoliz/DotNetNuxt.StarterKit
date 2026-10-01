@@ -8,7 +8,7 @@ namespace DotNetNuxt.StarterKit.BackEnd.Startup;
 public static partial class __SetupVersion
 {
     /// <summary>
-    /// Get app version from the entry assembly
+    /// Get app version from the running assembly
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="logger"></param>
@@ -17,8 +17,8 @@ public static partial class __SetupVersion
     {
 
         // Get app version from assembly attribute
-        var assembly = Assembly.GetEntryAssembly();
-        var version = assembly?
+        var assembly = Assembly.GetExecutingAssembly();
+        var version = assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion ?? "unknown";
 
