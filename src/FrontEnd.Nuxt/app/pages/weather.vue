@@ -4,6 +4,7 @@ import * as api from '../utils/apiclient'
 
 definePageMeta({
   title: 'Weather',
+  subtitle: 'This component demonstrates showing data loaded from a backend API service.',
   order: 2,
 })
 
@@ -46,17 +47,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <main>
-    <h1>Weather</h1>
-
-    <p>This component demonstrates showing data loaded from a backend API service.</p>
-
-    <ProblemDetailsViewer />
-
+  <div>
     <p v-if="isLoading"><em>Loading...</em></p>
     <table
       v-else
       class="table"
+      data-test-id="forecasts"
     >
       <thead>
         <tr>
@@ -80,5 +76,5 @@ onMounted(() => {
         </tr>
       </tbody>
     </table>
-  </main>
+  </div>
 </template>
