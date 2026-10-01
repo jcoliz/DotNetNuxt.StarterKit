@@ -16,6 +16,7 @@ public static class Extensions
 {
     private const string HealthEndpointPath = "/health";
     private const string AlivenessEndpointPath = "/alive";
+    private static string DatabaseHealthEndpointPath = "/health/db";
 
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
@@ -107,19 +108,26 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        // Adding health checks endpoints to applications in non-development environments has security implications.
-        // See https://aka.ms/aspire/healthchecks for details before enabling these endpoints in non-development environments.
-        if (app.Environment.IsDevelopment())
-        {
-            // All health checks must pass for app to be considered ready to accept traffic after starting
-            app.MapHealthChecks(HealthEndpointPath);
+        // Mapped in all environments: containers run non-Development but still need health probes.
+        // See https://aka.ms/aspire/healthchecks for security implications.
 
-            // Only health checks tagged with the "live" tag must pass for app to be considered alive
-            app.MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
-            {
-                Predicate = r => r.Tags.Contains("live")
-            });
-        }
+        // Infrastructure health check - excludes database check so app starts healthy without DB
+        app.MapHealthChecks(HealthEndpointPath, new HealthCheckOptions
+        {
+            Predicate = r => !r.Tags.Contains("db")
+        });
+
+        // Only health checks tagged with the "live" tag must pass for app to be considered alive
+        app.MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains("live")
+        });
+
+        // Dedicated database health check endpoint
+        app.MapHealthChecks(DatabaseHealthEndpointPath, new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains("db")
+        });
 
         return app;
     }

@@ -35,9 +35,9 @@ public static class __SetupDatabase
 
         builder.Services.AddScoped<IDataProvider, ApplicationDbContext>();
 
-        // TODO: Register database health check with "db" tag for the /health/db endpoint
-        //builder.Services.AddHealthChecks()
-        //    .AddCheck<DatabaseHealthCheck>("database", tags: ["db"]);
+        // Register database health check with "db" tag for the /health/db endpoint
+        builder.Services.AddHealthChecks()
+            .AddCheck<DatabaseHealthCheck>("database", tags: ["db"]);
 
         return true;
     }
