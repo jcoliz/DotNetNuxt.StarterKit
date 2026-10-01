@@ -2,15 +2,19 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+
   devServer: {
     port: parseInt(process.env.PORT ?? '5284'),
   },
+
   css: ['~/assets/scss/custom.scss'],
+
   router: {
     options: {
       linkActiveClass: 'active',
     },
   },
+
   vite: {
     css: {
       preprocessorOptions: {
@@ -27,10 +31,12 @@ export default defineNuxtConfig({
       noExternal: ['vue', 'feather-icons', '@coliz/vue-base-controls'],
     },
   },
+
   appConfig:
   {
     name: "DotNetNuxt.StarterKit",
   },
+
   runtimeConfig: {
     public: {
       // This will be replaced by NUXT_PUBLIC_SOLUTION_VERSION during build
@@ -44,4 +50,6 @@ export default defineNuxtConfig({
       applicationInsightsConnectionString: '',
     },
   },
+
+  modules: ['@nuxt/eslint'],
 })
