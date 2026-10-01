@@ -12,7 +12,6 @@ var backend = builder.AddProject<Projects.DotNetNuxt_StarterKit_BackEnd>("backen
     .WithEnvironment("APPLICATIONINSIGHTS_CONNECTION_STRING", appInsightsConnectionString ?? "")
     .WaitFor(postgresDb);
 
-/* TODO: Add frontend JavaScript app
 builder.AddJavaScriptApp("frontend-nuxt", "../FrontEnd.Nuxt")
     .WithPnpm()
     .WithReference(backend)
@@ -20,8 +19,7 @@ builder.AddJavaScriptApp("frontend-nuxt", "../FrontEnd.Nuxt")
     .WithEnvironment("NUXT_PUBLIC_SOLUTION_VERSION", "Aspire")
     .WithHttpEndpoint(port: 5284, env: "PORT")
     .WithEnvironment("NUXT_PUBLIC_APPLICATION_INSIGHTS_CONNECTION_STRING", appInsightsConnectionString ?? "")
-    .WithExternalHttpEndpoints()
-    .PublishAsDockerFile()
-    .WithHttpHealthCheck(path: "/status", statusCode: 200);
-*/
+    .WithExternalHttpEndpoints();
+//    .WithHttpHealthCheck(path: "/status", statusCode: 200);
+
 builder.Build().Run();
