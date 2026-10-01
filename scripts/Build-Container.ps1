@@ -32,15 +32,12 @@ try {
         exit 1
     }
 
-    $env:SOLUTION_VERSION = "container"
-    Write-Host "Building containers with version: $env:SOLUTION_VERSION" -ForegroundColor Cyan
-
     docker compose -f "$PSScriptRoot/../docker/docker-compose-ci.yml" build
     if ($LASTEXITCODE -ne 0) {
         throw "Docker build failed with exit code $LASTEXITCODE"
     }
 
-    Write-Host "Built Docker CI containers with solution version $env:SOLUTION_VERSION" -ForegroundColor Green
+    Write-Host "Built Docker CI containers" -ForegroundColor Green
 }
 catch {
     Write-Error "Failed to build containers: $_"
