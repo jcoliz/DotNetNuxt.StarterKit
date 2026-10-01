@@ -6,6 +6,11 @@ export default defineNuxtConfig({
     port: parseInt(process.env.PORT ?? '5284'),
   },
   css: ['~/assets/scss/custom.scss'],
+  router: {
+    options: {
+      linkActiveClass: 'active',
+    },
+  },
   vite: {
     css: {
       preprocessorOptions: {
@@ -20,6 +25,23 @@ export default defineNuxtConfig({
     ssr: {
       // Force these packages to be bundled with proper ESM interop
       noExternal: ['vue', 'feather-icons', '@coliz/vue-base-controls'],
+    },
+  },
+  appConfig:
+  {
+    name: "DotNetNuxt.StarterKit",
+  },
+  runtimeConfig: {
+    public: {
+      // This will be replaced by NUXT_PUBLIC_SOLUTION_VERSION during build
+      solutionVersion: 'nuxt.config.ts',
+      // This value is overwritten during the static generation step
+      // by the NUXT_PUBLIC_API_BASE_URL environment variable.
+      // Don't fill this in with a default value here, or it will cause problems!
+      apiBaseUrl: ``,
+      // WARNING: Capitalization must match underscores exactly when overriding from environment variable
+      // Leave empty — overridden at build/dev time by NUXT_PUBLIC_APPLICATION_INSIGHTS_CONNECTION_STRING
+      applicationInsightsConnectionString: '',
     },
   },
 })
