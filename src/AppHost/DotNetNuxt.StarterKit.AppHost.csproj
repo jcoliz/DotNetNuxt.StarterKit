@@ -6,4 +6,14 @@
     <UserSecretsId>18339455-a7b2-4898-ae38-009907f71db5</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.6.0" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.6.0" />
+    <PackageReference Include="DotNetEnv" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BackEnd\DotNetNuxt.StarterKit.BackEnd.csproj" />
+  </ItemGroup>
+
 </Project>
