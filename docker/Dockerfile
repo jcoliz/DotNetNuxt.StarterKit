@@ -23,8 +23,8 @@ COPY docker/. docker/
 # Software version number
 #   - Should correspond to tag
 #   - Including default value so if someone just runs "docker build", it will work
-ARG SOLUTION_VERSION=container
-ENV SOLUTION_VERSION=${SOLUTION_VERSION}
+ARG SOLUTION_VERSION
+ENV SOLUTION_VERSION=${SOLUTION_VERSION:-container}
 
 # Build and publish a release
 RUN dotnet publish ./src/BackEnd/ -c Release -o out --no-restore -p:SolutionVersion=$SOLUTION_VERSION
