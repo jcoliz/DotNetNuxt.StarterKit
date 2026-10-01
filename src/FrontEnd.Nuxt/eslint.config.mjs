@@ -5,6 +5,7 @@ import prettier from 'eslint-config-prettier'
 export default withNuxt(
   prettier,
   {
+    files: ['**/*.{ts,mts,cts,vue}'],
     rules: {
       'vue/multi-word-component-names': 'off',
       '@typescript-eslint/no-unused-vars': [
