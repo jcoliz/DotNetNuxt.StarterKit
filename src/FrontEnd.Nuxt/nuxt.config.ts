@@ -32,9 +32,8 @@ export default defineNuxtConfig({
     },
   },
 
-  appConfig:
-  {
-    name: "DotNetNuxt.StarterKit",
+  appConfig: {
+    name: 'DotNetNuxt.StarterKit',
   },
 
   runtimeConfig: {
