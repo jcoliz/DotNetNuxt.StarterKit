@@ -10,8 +10,12 @@ definePageMeta({
 /**
  * Forecast data to display
  */
-
 const forecasts = ref<api.IWeatherForecast[]>()
+
+/**
+ * Error display state
+ */
+const errors = useProblemDetails()
 
 /**
  * Whether we are loading data from the server presently
@@ -35,7 +39,7 @@ const client = useApiClient(api.WeatherClient)
       forecasts.value = result
     })
     .catch((error) => {
-      console.error("Failed to fetch weather data:", error)
+      errors.handleApiError(error, 'Loading failed', 'Failed to fetch weather data')
     })
     .finally(() => {
       isLoading.value = false
@@ -56,6 +60,8 @@ const client = useApiClient(api.WeatherClient)
         <h1>Weather</h1>
 
         <p>This component demonstrates showing data loaded from a backend API service.</p>
+
+        <ProblemDetailsViewer />
 
         <p v-if="isLoading"><em>Loading...</em></p>
         <table v-else class="table">

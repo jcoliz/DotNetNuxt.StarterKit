@@ -82,8 +82,8 @@ export class AuthorizedApiBase {
       this.configuration.useProblemDetails &&
       this.configuration.clearProblemDetails !== false
     ) {
-      // TODO: const problem = useProblemDetails()
-      // problem.clearError()
+      const problem = useProblemDetails()
+      problem.clearError()
     }
 
     return options
