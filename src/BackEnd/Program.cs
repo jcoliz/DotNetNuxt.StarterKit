@@ -63,19 +63,7 @@ try
 
     builder.SetupVersion(logger);
 
-    builder.Services.AddCors(options =>
-    {
-        options.AddDefaultPolicy(policy =>
-        {
-            policy.WithOrigins(startupOptions.AllowedCorsOrigins)
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials()
-                    // Expose content-disposition header for file downloads
-                    // so the client can read the filename from the response
-                    .WithExposedHeaders("content-disposition");
-        });
-    });
+    builder.Services.AddCorsPolicy(startupOptions.AllowedCorsOrigins);
 
     var app = builder.Build();
 
