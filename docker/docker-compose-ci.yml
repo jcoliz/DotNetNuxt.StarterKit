@@ -1,4 +1,4 @@
-name: lwa_development_ci
+name: dnn_development_ci
 services: 
   dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:13

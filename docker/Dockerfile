@@ -41,5 +41,5 @@ RUN apt-get update -yq && apt-get install -yq curl
 
 COPY --from=build-env /App/out .
 
-ENTRYPOINT ["dotnet", "DotNetNuxt.StarterKit.dll"]
+ENTRYPOINT ["dotnet", "DotNetNuxt.StarterKit.BackEnd.dll"]
 HEALTHCHECK --interval=10s --timeout=5s --retries=5 CMD [ "curl", "http://localhost:8080/health" ]
