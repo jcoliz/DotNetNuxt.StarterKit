@@ -57,6 +57,10 @@ try
     builder.Services.AddControllers();
     builder.Services.AddControllersFeatures();
 
+    // TODO: SHould AddControllersFeatures be responsible for adding appliccation features,
+    // in cascading fashion?
+    builder.Services.AddApplicationFeatures();
+
     builder.Services.AddSwagger();
 
     builder.SetupVersion(logger);
