@@ -158,8 +158,7 @@ interface SourceDebugLog extends DebugLogStorage {
   logger: DebugLogger
 }
 
-export function useDebugLog(source: string): SourceDebugLog
-export function useDebugLog(source: string, options: DebugLogSourceOptions): SourceDebugLog
+export function useDebugLog(source: string, options?: DebugLogSourceOptions): SourceDebugLog
 export function useDebugLog(): DebugLogStorage
 export function useDebugLog(source?: string, options?: DebugLogSourceOptions): SourceDebugLog {
   const appConfig = useAppConfig()
@@ -208,7 +207,7 @@ export function useDebugLog(source?: string, options?: DebugLogSourceOptions): S
     }
   }
 
-  function writeApplicationInsights(entry: DebugLogEntry): void {
+  function writeApplicationInsights(_entry: DebugLogEntry): void {
     try {
       //TODO
       /*

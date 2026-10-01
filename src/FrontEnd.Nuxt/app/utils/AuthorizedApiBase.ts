@@ -103,11 +103,11 @@ export class AuthorizedApiBase {
    * @returns The processed response
    * @throws Lots of different errors based on the situation
    */
-  protected async transformResult(
+  protected async transformResult<T>(
     _url_: string,
     _response: Response,
-    arg2: (response: Response) => Promise<any>,
-  ): Promise<any> {
+    arg2: (response: Response) => Promise<T>,
+  ): Promise<T> {
     //
     // We don't actually do anything here. Just process the pipeline.
     // We care about the errors

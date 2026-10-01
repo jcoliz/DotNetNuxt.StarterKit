@@ -20,7 +20,7 @@ export function useProblemDetails() {
    *
    * @param details - Normalized problem details to track
    */
-  function trackProblemDetails(details: IProblemDetails, title: string) {
+  function trackProblemDetails(_details: IProblemDetails, _title: string) {
     //TODO:
     /*
     ai.trackException(

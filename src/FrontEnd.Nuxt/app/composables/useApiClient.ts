@@ -1,4 +1,4 @@
-import { AuthorizedApiBase, type IClientConfiguration } from '~/utils/AuthorizedApiBase'
+import type { AuthorizedApiBase, IClientConfiguration } from '~/utils/AuthorizedApiBase'
 
 /**
  * Type for API client constructor
