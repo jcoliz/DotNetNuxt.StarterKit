@@ -43,8 +43,6 @@ try
     // TODO: Add Key Vault config source, if configured
     // builder.Configuration.SetupAzureKeyVault(logger);
 
-    builder.SetupVersion(logger);
-
     StartupOptions startupOptions = new();
     builder.Configuration.Bind(StartupOptions.Section, startupOptions);
     builder.Services.Configure<StartupOptions>(builder.Configuration.GetSection(StartupOptions.Section));
@@ -57,7 +55,8 @@ try
 
     builder.SetupDatabase(logger);
 
-    builder.Services.AddWebApiServices();
+    var version = builder.GetVersion(logger);
+    builder.Services.AddWebApiServices(version);
 
     builder.Services.AddApplicationFeatures();
 

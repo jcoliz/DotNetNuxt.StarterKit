@@ -1,3 +1,4 @@
+using DotNetNuxt.StarterKit.Controllers;
 using DotNetNuxt.StarterKit.Controllers.Middleware;
 using Microsoft.AspNetCore.Builder;
 
@@ -12,9 +13,11 @@ public static class ControllersExtensions
     /// Add services for controllers and exception handling middleware
     /// </summary>
     /// <param name="services">Target to add into</param>
+    /// <param name="version">Application version reported by the version endpoint</param>
     /// <returns>The MVC builder, so callers can chain further MVC configuration</returns>
-    public static IMvcBuilder AddWebApiServices(this IServiceCollection services)
+    public static IMvcBuilder AddWebApiServices(this IServiceCollection services, string? version)
     {
+        services.Configure<VersionOptions>(options => options.Version = version);
         services.AddProblemDetails();
         services.AddExceptionHandler<ArgumentExceptionHandler>();
 

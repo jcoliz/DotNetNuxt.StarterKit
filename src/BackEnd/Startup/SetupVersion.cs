@@ -8,12 +8,12 @@ namespace DotNetNuxt.StarterKit.BackEnd.Startup;
 public static partial class __SetupVersion
 {
     /// <summary>
-    /// Get app version, store in configuration for later use
+    /// Get app version from the entry assembly
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="logger"></param>
-    /// <returns></returns>
-    public static WebApplicationBuilder SetupVersion(this WebApplicationBuilder builder, ILogger logger)
+    /// <returns>Informational version, or "unknown"</returns>
+    public static string GetVersion(this WebApplicationBuilder builder, ILogger logger)
     {
 
         // Get app version from assembly attribute
@@ -22,10 +22,9 @@ public static partial class __SetupVersion
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion ?? "unknown";
 
-        builder.Configuration["Startup:Version"] = version;
-        LogVersion(logger,version);
+        LogVersion(logger, version);
 
-        return builder;
+        return version;
     }
 
     #region Logging

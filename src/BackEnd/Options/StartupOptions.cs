@@ -23,12 +23,4 @@ public record StartupOptions
     /// Allowed CORS origins
     /// </summary>
     public string[] AllowedCorsOrigins { get; set; } = [];
-
-    /// <summary>
-    /// Application version
-    /// </summary>
-    /// <remarks>
-    /// Injected by the build system
-    /// </remarks>
-    public string Version { get; init; } = "Unknown";
 }
