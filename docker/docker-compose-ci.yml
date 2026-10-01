@@ -1,0 +1,45 @@
+name: lwa_development_ci
+services: 
+  dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:13
+    ports:
+      - '18888:18888'  # Dashboard UI
+      - '18889:18889'  # OTLP/gRPC endpoint
+      - '18890:18890'  # OTLP/HTTP endpoint
+    environment:
+      - DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS=true
+    restart: unless-stopped
+  backend:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+      args:
+        SOLUTION_VERSION: ${SOLUTION_VERSION}
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Container
+      - USER__0__PASSWORD=${TESTPWORD}
+      - ConnectionStrings__DefaultConnection=Host=dnn_db;Database=db;Username=postgres;Password=development
+      - STARTUP__ALLOWEDCORSORIGINS__0=http://localhost:5400
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://dashboard:18889
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_SERVICE_NAME=backend
+    restart: always
+    ports:
+      - '5401:8080'
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:15.4-alpine
+    container_name: dnn_db
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=development
+      - POSTGRES_DB=db
+      - POSTGRES_USER=postgres
+      - PGUSER=postgres
+    healthcheck:
+      test: [ "CMD-SHELL" , "pg_isready" ]
+      interval: 1s
+      timeout: 5s
+      retries: 10

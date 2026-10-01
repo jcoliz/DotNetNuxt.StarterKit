@@ -1,0 +1,73 @@
+# ----------------------------------------------------------
+# Directories NOT needed in the Docker build
+# ----------------------------------------------------------
+docs/
+scripts/
+tools/
+plans/
+docker/
+!docker/config.toml
+!docker/CONFIG.md 
+.azure/
+submodules/
+!submodules/NuxtIdentity/src/
+
+# Alternative host / frontend projects
+src/FrontEnd.Nuxt/
+src/AppHost/
+
+# Database migration runners & alternative DB providers
+src/Data/Postgres.MigrationsMain/
+
+# Test projects
+Tests/
+
+# ----------------------------------------------------------
+# Root files NOT needed in the Docker build
+# ----------------------------------------------------------
+.editorconfig
+.gitignore
+.gitmodules
+.roorules
+README.md
+
+# ----------------------------------------------------------
+# Build artifacts & misc
+# ----------------------------------------------------------
+*/bin/
+*/bin
+*/obj/
+*/obj
+out/
+**/*.sln
+**/*.slnx
+*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+**/lerna-debug.log*
+**/version.txt
+
+Main.Vue/FrontEnd/node_modules
+Main.Vue/FrontEnd/dist
+Main.Vue/FrontEnd/dist-ssr
+**/*.local
+
+# Editor directories and files
+**/.vscode/*
+!.vscode/extensions.json
+**/.idea
+**/.DS_Store
+**/*.suo
+*.ntvs*
+*.njsproj
+*.sw?
+**/node_modules/
+**/dist
+**/.git
+**/npm-debug.log
+**/.coverage
+**/.coverage.*
+**/.env
+**/.aws
