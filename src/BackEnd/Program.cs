@@ -143,3 +143,6 @@ finally
     startupLoggerFactory?.Dispose();
 }
 
+
+// Exposes the entry point to WebApplicationFactory<Program> in integration tests
+public partial class Program;
