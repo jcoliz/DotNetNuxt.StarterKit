@@ -1,6 +1,8 @@
 using DotNetNuxt.StarterKit.Controllers;
 using DotNetNuxt.StarterKit.Controllers.Middleware;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +20,18 @@ public static class ControllersExtensions
     public static IMvcBuilder AddWebApiServices(this IServiceCollection services, string? version)
     {
         services.Configure<VersionOptions>(options => options.Version = version);
-        services.AddProblemDetails();
+        services.AddProblemDetails(options => options.CustomizeProblemDetails = context =>
+        {
+            // The exception middleware clears the endpoint, so prefer the original from the feature
+            var endpoint = context.HttpContext.Features.Get<IExceptionHandlerFeature>()?.Endpoint
+                ?? context.HttpContext.GetEndpoint();
+
+            var operation = endpoint?.Metadata.GetMetadata<ProblemContextAttribute>();
+            if (operation is not null)
+            {
+                context.ProblemDetails.Detail ??= operation.Message;
+            }
+        });
         services.AddExceptionHandler<ArgumentExceptionHandler>();
 
         return services.AddControllers();

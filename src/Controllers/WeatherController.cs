@@ -28,10 +28,11 @@ public partial class WeatherController(WeatherForecastFeature feature, ILogger<W
     /// <param name="count">Number of forecasts to include</param>
     /// <returns>Current weather forecasts</returns>
     [HttpGet()]
+    [ProblemContext("Failed to fetch weather forecasts")]
     //[Authorize(Policy = "ListRead")]
     [ProducesResponseType(typeof(IReadOnlyCollection<WeatherForecast>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Get(
-        [Range(-30, 30)] int offset = 0, 
+        [Range(-30, 30)] int offset = 0,
         [Range(1, 60)] int count = 5)
     {
         var forecasts = await feature.ListForecasts(offset, count);

@@ -28,7 +28,10 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(offset, -30, nameof(offset));
         ArgumentOutOfRangeException.ThrowIfLessThan(count, 1, nameof(count));
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(count + offset, 30, nameof(count));
+        if (count + offset > 30)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), count, "The sum of offset and count must not exceed 30.");
+        }
 
         using var activity = _activitySource.StartActivity(nameof(ListForecasts), ActivityKind.Server);
 
@@ -80,7 +83,7 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
     /// </remarks>
     /// <param name="incoming">New forecast values</param>
     /// <returns>Number of forecasts updated, added</returns>
-    public async Task<(int,int)> UpdateForecasts(IEnumerable<WeatherForecast> incoming)
+    public async Task<(int, int)> UpdateForecasts(IEnumerable<WeatherForecast> incoming)
     {
         using var activity = _activitySource.StartActivity(nameof(UpdateForecasts), ActivityKind.Server);
 

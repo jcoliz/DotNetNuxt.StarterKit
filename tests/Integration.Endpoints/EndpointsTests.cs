@@ -70,4 +70,16 @@ public class EndpointsTests
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
+
+    [TestCase("/api/weather?offset=31", Description = "model validation")]
+    [TestCase("/api/weather?offset=0&count=60", Description = "feature validation")]
+    public async Task Weather_BadRequest_NamesTheOperation(string url)
+    {
+        var response = await _client.GetAsync(url);
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        Assert.That(json.RootElement.GetProperty("detail").GetString(), Is.EqualTo("Failed to fetch weather forecasts"));
+    }
 }
