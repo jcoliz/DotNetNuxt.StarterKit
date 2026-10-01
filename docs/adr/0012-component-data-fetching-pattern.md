@@ -66,10 +66,13 @@ With a statically generated app, the main benefit of centralized fetching (serve
 
 ### Error handling stays centralized
 
-The generated clients report errors automatically, so components need no `catch`:
+The generated clients report errors automatically, so components never call `useProblemDetails()` just to report an API failure. How a component reacts depends on whether it reads or writes.
+
+**Reads** use the default client. A failed call is reported and swallowed, resolving to `undefined`. The return type of `useApiClient()` includes `| undefined`, so the compiler forces callers to handle it, and no `catch` is needed:
 
 ```typescript
 const client = useApiClient(WeatherClient)
+const forecasts = ref<IWeatherForecast[]>()
 
 isLoading.value = true
 try {
@@ -79,13 +82,27 @@ try {
 }
 ```
 
-By default a failed call is reported to `useProblemDetails()` and swallowed, so the call resolves to `undefined`. Callers that use the result, or need flow control, opt in with `useApiClient(Client, { throwOnError: true })`. The error is still reported, then rethrown.
+**Writes** (and any call where the caller must know it succeeded) opt in with `throwOnError: true`. The error is still reported, then rethrown, so the success path goes inside the `try`:
+
+```typescript
+const client = useApiClient(ItemsClient, { throwOnError: true })
+
+try {
+  await client.delete(id)
+  emit('deleted') // only reached on success
+} catch {
+  // Already reported to problem details by the client
+}
+```
 
 This provides:
 - Global reactive error state
 - Automatic clearing of previous errors before an API call (in `AuthorizedApiBase.transformOptions`)
 - Automatic reporting of failures (in `AuthorizedApiBase.transformResult`), so no call site can forget
+- Types that tell the truth about swallowed failures
 - Consistent error display across the app
+
+The trade-off is that errors use a generic title, because generated methods take no per-call options.
 
 ### When to consolidate
 
