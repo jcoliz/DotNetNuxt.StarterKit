@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@coliz/vue-base-controls": "^0.0.15",
     "bootstrap": "^5.3.8",
     "nuxt": "^4.5.2",
     "vue": "^3.5.43",
