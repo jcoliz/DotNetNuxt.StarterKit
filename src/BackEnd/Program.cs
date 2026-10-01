@@ -53,12 +53,8 @@ try
 
     builder.SetupDatabase(logger);
 
-    // TODO: Should we move AddControllers INTO add ControllersFeatures?
-    builder.Services.AddControllers();
-    builder.Services.AddControllersFeatures();
+    builder.Services.AddWebApiServices();
 
-    // TODO: SHould AddControllersFeatures be responsible for adding appliccation features,
-    // in cascading fashion?
     builder.Services.AddApplicationFeatures();
 
     builder.Services.AddSwagger();

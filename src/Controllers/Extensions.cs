@@ -12,13 +12,13 @@ public static class ControllersExtensions
     /// Add services for controllers and exception handling middleware
     /// </summary>
     /// <param name="services">Target to add into</param>
-    /// <returns>The same service collection, for chaining</returns>
-    public static IServiceCollection AddControllersFeatures(this IServiceCollection services)
+    /// <returns>The MVC builder, so callers can chain further MVC configuration</returns>
+    public static IMvcBuilder AddWebApiServices(this IServiceCollection services)
     {
         services.AddProblemDetails();
         services.AddExceptionHandler<ArgumentExceptionHandler>();
 
-        return services;
+        return services.AddControllers();
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public static class ControllersExtensions
     /// </summary>
     /// <param name="app">Target to add into</param>
     /// <returns>The same application builder, for chaining</returns>
-    public static IApplicationBuilder UseControllersFeatures(this IApplicationBuilder app)
+    public static IApplicationBuilder UseWebApiServices(this IApplicationBuilder app)
     {
         app.UseExceptionHandler();
 
