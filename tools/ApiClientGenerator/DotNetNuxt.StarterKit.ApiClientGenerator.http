@@ -1,0 +1,6 @@
+@DotNetNuxt.StarterKit.ApiClientGenerator_HostAddress = http://localhost:5099
+
+GET {{DotNetNuxt.StarterKit.ApiClientGenerator_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -27,6 +27,9 @@
     <Project Path="tests/Unit/DotNetNuxt.Tests.Unit.csproj" />
   </Folder>
   <Folder Name="/tools/" />
+  <Folder Name="/tools/ApiClientGenerator/">
+    <Project Path="tools/ApiClientGenerator/DotNetNuxt.StarterKit.ApiClientGenerator.csproj" />
+  </Folder>
   <Folder Name="/tools/Postgres.MigrationsMain/">
     <Project Path="tools/Postgres.MigrationsMain/DotNetNuxt.StarterKit.Data.Postgres.MigrationsMain.csproj" />
   </Folder>
