@@ -18,12 +18,27 @@ const isServerError = computed(() => {
 const additionalFields = computed(() => {
   if (!errors.problem.value) return undefined
 
-  const standardFields = ['type', 'title', 'status', 'detail', 'instance']
+  const standardFields = ['type', 'title', 'status', 'detail', 'instance', 'errors']
   const entries = Object.entries(errors.problem.value).filter(
     ([key]) => !standardFields.includes(key),
   )
 
   return entries.length > 0 ? Object.fromEntries(entries) : undefined
+})
+
+// Validation problems list what the user can fix, so they are shown inline, not under details
+const validationErrors = computed(() => {
+  const raw = errors.problem.value?.errors
+  if (!raw || typeof raw !== 'object') return undefined
+
+  const items = Object.entries(raw as Record<string, unknown>).flatMap(([field, messages]) =>
+    (Array.isArray(messages) ? messages : [messages]).map((message) => ({
+      field,
+      message: String(message),
+    })),
+  )
+
+  return items.length > 0 ? items : undefined
 })
 
 // Auto-expand for server errors when there are additional fields
@@ -65,6 +80,19 @@ const toggleMore = () => {
     >
       {{ errors.problem.value?.detail }}
     </span>
+    <ul
+      v-if="validationErrors"
+      class="mt-2 mb-0"
+      data-test-id="validation-errors"
+    >
+      <li
+        v-for="(item, index) in validationErrors"
+        :key="index"
+      >
+        <strong v-if="item.field">{{ item.field }}:</strong>
+        {{ item.message }}
+      </li>
+    </ul>
     <div
       v-if="additionalFields"
       class="mt-2"
