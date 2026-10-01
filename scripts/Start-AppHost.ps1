@@ -21,6 +21,8 @@ param()
 
 $ErrorActionPreference = "Stop"
 
+Import-Module (Join-Path $PSScriptRoot "DockerUtilities.psm1") -Force
+
 try {
     $repoRoot = Split-Path $PSScriptRoot -Parent
     $appHostPath = "$repoRoot/src/AppHost"
@@ -30,8 +32,7 @@ try {
     }
 
     Write-Host "Checking Docker is running..." -ForegroundColor Cyan
-    docker info 2>&1 | Out-Null
-    if ($LASTEXITCODE -ne 0) {
+    if (-not (Test-DockerRunning)) {
         throw "Docker is not running. Please start Docker Desktop and try again."
     }
     Write-Host "OK Docker is running" -ForegroundColor Green
