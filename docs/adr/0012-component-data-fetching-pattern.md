@@ -66,24 +66,26 @@ With a statically generated app, the main benefit of centralized fetching (serve
 
 ### Error handling stays centralized
 
-Every component uses the same pattern, which makes distributed fetching practical:
+The generated clients report errors automatically, so components need no `catch`:
 
 ```typescript
-const errors = useProblemDetails()
 const client = useApiClient(WeatherClient)
 
+isLoading.value = true
 try {
-  await client.get(0, 5)
-} catch (error) {
-  errors.handleApiError(error, 'Context-specific title')
+  forecasts.value = await client.get(0, 5) // undefined if the call failed
+} finally {
+  isLoading.value = false
 }
 ```
+
+By default a failed call is reported to `useProblemDetails()` and swallowed, so the call resolves to `undefined`. Callers that use the result, or need flow control, opt in with `useApiClient(Client, { throwOnError: true })`. The error is still reported, then rethrown.
 
 This provides:
 - Global reactive error state
 - Automatic clearing of previous errors before an API call (in `AuthorizedApiBase.transformOptions`)
+- Automatic reporting of failures (in `AuthorizedApiBase.transformResult`), so no call site can forget
 - Consistent error display across the app
-- Context-specific titles for each operation
 
 ### When to consolidate
 

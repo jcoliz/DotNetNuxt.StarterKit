@@ -22,8 +22,10 @@ export interface IClientConfiguration {
    */
   clearProblemDetails?: boolean
   /**
-   * True if the client show throw an error when problems are reported
-   * from server. False or undefined to handle errors entirely in client.
+   * True to rethrow errors to the caller after they are reported.
+   * False or undefined to swallow them: the call then resolves to `undefined`
+   * (despite the generated return type), so callers that use the result
+   * should set this to true.
    */
   throwOnError?: boolean
 
@@ -45,9 +47,7 @@ export interface IClientConfiguration {
  *  * Injects auth token if exists
  *  * Updates the refresh token, if caller has opted in
  *  * Directly posts any reported error to global problem details, if caller has opted in
- *
- * Soon, it will...
- *  * Standardize the errors so that all exceptions are problem details
+ *  * Rethrows errors to the caller only if `throwOnError` is set
  *
  * @see https://github.com/RicoSuter/NSwag/wiki/TypeScriptClientGenerator#inject-an-authorization-header
  */
@@ -94,39 +94,31 @@ export class AuthorizedApiBase {
    *
    * Derived API client classes will call this after receiving a response
    * from the server, but before parsing it. By design, this is our chance
-   * to modify the response before or after parsing. However, we just use
-   * it to capture any errors thrown by parsing.
+   * to modify the response before or after parsing. We use it to report
+   * any error (non-success responses surface as exceptions from the
+   * processing function) to useProblemDetails, if the caller opted in.
    *
    * @param _url_ The request URL that produced this response
    * @param _response The exact response from the server
    * @param arg2 The derived class's processing function
-   * @returns The processed response
-   * @throws Lots of different errors based on the situation
+   * @returns The processed response, or `undefined` if an error was swallowed
+   * @throws The original error, only when `throwOnError` is set
    */
   protected async transformResult<T>(
     _url_: string,
     _response: Response,
     arg2: (response: Response) => Promise<T>,
   ): Promise<T> {
-    //
-    // We don't actually do anything here. Just process the pipeline.
-    // We care about the errors
-    //
-    const result = await arg2(_response)
-    return result
-    //
-    // The original design here was to capture errors and convert them
-    // to ProblemDetails, but that hasn't been implemented yet.
-    //
-    // Right now, we have this boilerplate after every API call in the generated clients to post errors to the global problem details:
-    //
-    // catch (error) {
-    // errors.handleApiError(error, 'Loading failed', 'Failed to fetch items')
-    //
-    // This does have the advantage of allowing each call to customize the error message, but it is a lot of boilerplate, and it's easy for developers to forget to do it.
-    // It would be worth considering to move this logic here, so that all errors are standardized and automatically posted, and developers don't have to worry about it at all.
-    // We could still allow for custom error messages by allowing the caller to pass in a custom
-    // error handler in the configuration, or by allowing the caller to pass in a custom error message in the configuration that we use when posting the error.
-    //
+    try {
+      return await arg2(_response)
+    } catch (error) {
+      if (this.configuration?.useProblemDetails) {
+        await useProblemDetails().handleApiError(error, 'Request failed')
+      }
+      if (this.configuration?.throwOnError) {
+        throw error
+      }
+      return undefined as T
+    }
   }
 }

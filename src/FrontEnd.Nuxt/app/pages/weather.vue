@@ -13,11 +13,6 @@ definePageMeta({
 const forecasts = ref<api.IWeatherForecast[]>()
 
 /**
- * Error display state
- */
-const errors = useProblemDetails()
-
-/**
  * Whether we are loading data from the server presently
  */
 const isLoading = ref(false)
@@ -34,17 +29,12 @@ async function getData() {
   forecasts.value = undefined
   isLoading.value = true
 
-  client
-    .get(0, 5)
-    .then((result) => {
-      forecasts.value = result
-    })
-    .catch((error) => {
-      errors.handleApiError(error, 'Loading failed', 'Failed to fetch weather data')
-    })
-    .finally(() => {
-      isLoading.value = false
-    })
+  try {
+    // Errors are reported to problem details by the client; result is undefined on failure
+    forecasts.value = await client.get(0, 5)
+  } finally {
+    isLoading.value = false
+  }
 }
 
 /**
