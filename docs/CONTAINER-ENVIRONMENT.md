@@ -28,7 +28,7 @@ Instead, with one script, we can quickly build the application into containers a
 ./scripts/Run-FunctionalTestsVsContainer.ps1
 ```
 
-> ![TODO] This is yet to be implemented in the starter kit
+> ![TODO] Functional tests are not implemented in the starter kit
 
 ### Functional tests in CI build
 
@@ -65,7 +65,7 @@ Finally, to run `docker compose down`:
 ./scripts/Stop-Container.ps1
 ```
 
-Once running, the frontend is at http://localhost:5300 and the backend API is at http://localhost:5301.
+Once running, the frontend is at http://localhost:5400 and the backend API is at http://localhost:5401.
 
 ## How it's built
 
@@ -75,6 +75,9 @@ Using a docker compose project to manage building, running, pushing, and publish
 
 > [!NOTE]
 > In production, secrets are read from an Azure Key Vault via Managed Identity (see [SetupKeyVault.cs](../src/BackEnd/Startup/SetupKeyVault.cs)). The container environment instead bakes its test secrets into `appsettings.Container.json` and passes `TESTPWORD` as an environment variable, so there is a small variance from production in that way.
+
+> [!TODO]
+> Azure Key Vault secrets is not yet implemented in the starter kit
 
 The backend [Dockerfile](../docker/Dockerfile) and the Frontend.Nuxt [Dockerfile](../src/FrontEnd.Nuxt/docker/Dockerfile) specify the needed build and run details.
 
@@ -141,12 +144,12 @@ Change the `PWDEBUG` setting in [container-msedge.runsettings](../Tests/Function
 The backend logs useful information to stdout:
 
 ```powershell
-docker logs lwa_development_ci-backend-1
+docker logs dnn_development_ci-backend-1
 ```
 
 ### 4. Increase Log Levels
 
-If you need more detailed logs, raise the `ListsWebApp` logging level in [appsettings.Container.json](../src/BackEnd/appsettings.Container.json), or override it with a `Logging__LogLevel__ListsWebApp` environment variable in the docker-compose file. The logs will appear in both `docker logs` and the Aspire Dashboard.
+If you need more detailed logs, raise the `DotNetNuxt` logging level in [appsettings.Container.json](../src/BackEnd/appsettings.Container.json), or override it with a `Logging__LogLevel__DotNetNuxt` environment variable in the docker-compose file. The logs will appear in both `docker logs` and the Aspire Dashboard.
 
 ### 5. Check Browser Console
 

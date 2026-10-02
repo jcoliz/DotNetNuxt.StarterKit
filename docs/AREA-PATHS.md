@@ -1,7 +1,7 @@
 # Area Paths
 
 This document describes the area path structure used on work items in ADO. This structure is ALSO
-used for commit scopes. The commit scope is always the **last segment only** — never the full path.
+used for commit scopes. When an area-path commit scope is used, use the **last segment only** — never the full path.
 Use the lowercased form of that last segment. If there is a parenthesized term, use that instead.
 
 For example:
@@ -54,7 +54,7 @@ Tests
     /Functional
 
 Build
-    /Azure Pipelines (ci) -- Includes GitHbb workflows
+    /Azure Pipelines (ci) -- Includes GitHub workflows
     /Infrastructure (infra) -- Bicep templates, deployment config & scripts
     /Docker
     /System -- DotNet build system, e.g. .slnx, .csproj, .editorconfig, .vscode, Directory.Build.props config

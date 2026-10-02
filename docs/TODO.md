@@ -5,3 +5,4 @@
 - Azure Pipelines definitions for CI & release flows
 - Authentication using @sidebase/nuxt-auth and NuxtIdentity
 - Tenant- and Role-based Authorization using Asp.NET policies and a new tenancy library
+- Reading secrets from Azure Key Vault

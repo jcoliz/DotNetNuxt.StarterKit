@@ -36,13 +36,13 @@ Use one of the following types to categorize your commit:
     use the type that reflects the spirit of the change (e.g. `fix`, `feat`, `refactor`). The tests are
     just following along.
   - **Exception — test infrastructure**: Minor changes that exist solely to enable tests (e.g. adding
-    test IDs to elements) can stay as `test` even if they touch application code.
+    test IDs to elements) can stay as `tests` even if they touch application code.
 - We don't use `chore`. Most everything fits under `build`, unless it affects application code, in which case, look to `refactor` or `fix`.
 - We use `ci` as a scope within build, e.g. `build(ci)`.
 
 ## Scopes
 
-Use project-specific scopes as listed in [AreaPaths.md](./AreaPaths.md) to identify an area of change
+Use project-specific scopes as listed in [AREA-PATHS.md](./AREA-PATHS.md) to identify an area of change
 
 ### Architecture Layer Scopes
 
@@ -171,7 +171,7 @@ Closes #456
 
 Credit co-authors when pair programming:
 
-```
+```text
 feat(frontend): implement user profile page
 
 Co-authored-by: Jane Doe <jane@example.com>
@@ -181,13 +181,13 @@ Co-authored-by: Jane Doe <jane@example.com>
 
 ### Simple Feature
 
-```
+```text
 feat(ui): add browse view page
 ```
 
 ### Bug Fix with Details
 
-```
+```text
 fix(data): prevent duplicate migration applications
 
 Check for existing migrations before applying to avoid
@@ -198,15 +198,15 @@ Fixes #78
 
 ### Test Changes
 
-```
-test(unit): add validation tests for list model
-test(functional): fix flaky authentication test
-test(integration): refactor database setup for better performance
+```text
+tests(unit): add validation tests for list model
+tests(functional): fix flaky authentication test
+tests(integration): refactor database setup for better performance
 ```
 
 ### Refactoring with Multiple Changes
 
-```
+```text
 refactor(app): restructure views feature organization
 
 - Move validation logic to separate validator class
@@ -220,13 +220,13 @@ maintaining the same external API.
 
 ### Documentation Update
 
-```
+```text
 docs(readme): update installation instructions for .NET 10
 ```
 
 ### Infrastructure Change
 
-```
+```text
 build(ci): add automated deployment workflow
 
 Implements continuous deployment to Azure on main branch merges.
