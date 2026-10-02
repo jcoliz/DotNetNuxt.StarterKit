@@ -18,7 +18,7 @@ docker/
 # ----------------------------------------------------------
 # Dev/lint/format config (not needed for production build)
 # ----------------------------------------------------------
-eslint.config.js
+eslint.config.*
 .prettierrc
 .prettierignore
 tsconfig.json

@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 # Build stage
 FROM node:24-alpine AS builder
 
@@ -9,8 +11,9 @@ WORKDIR /app
 # Copy package files including pnpm lockfile
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
-# Install dependencies using pnpm
-RUN pnpm install --frozen-lockfile
+# Install dependencies using pnpm (scripts skipped: nuxt prepare needs the source, and runs during generate)
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile --ignore-scripts
 
 # Copy source code
 COPY ./ ./
@@ -31,7 +34,7 @@ ENV NUXT_PUBLIC_APPLICATION_INSIGHTS_CONNECTION_STRING=$NUXT_PUBLIC_APPLICATION_
 RUN pnpm run generate
 
 # Production stage
-FROM nginx:alpine
+FROM nginx:1.30-alpine
 
 # Copy the built static files from builder stage
 COPY --from=builder /app/.output/public /usr/share/nginx/html
