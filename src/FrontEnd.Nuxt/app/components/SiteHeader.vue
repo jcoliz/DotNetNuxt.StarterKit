@@ -1,5 +1,24 @@
 <script setup lang="ts">
+import type { LoginStateModel } from '~/utils/loginState'
+
 const appConfig = useAppConfig()
+
+// TODO: Populate from a real identity provider
+const loginState = reactive<LoginStateModel>({
+  isLoggedIn: false,
+  name: undefined,
+  photo: undefined,
+  profileRoute: '/profile',
+  onLogin: () => {
+    loginState.isLoggedIn = true
+    loginState.name = 'User Name'
+  },
+  onLogout: () => {
+    loginState.isLoggedIn = false
+    loginState.name = undefined
+    loginState.photo = undefined
+  },
+})
 const displayRoutes = useRouter()
   .getRoutes()
   .filter((x) => x.meta.order)
@@ -32,7 +51,7 @@ const displayRoutes = useRouter()
         >
       </ul>
 
-      <LoginState />
+      <BaseLoginState :state="loginState" />
     </header>
   </div>
 </template>
