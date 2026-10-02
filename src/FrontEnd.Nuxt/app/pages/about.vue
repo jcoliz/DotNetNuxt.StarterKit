@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import App from '~/app.vue'
+
 definePageMeta({
   title: 'About',
   subtitle: 'Information about this app.',
@@ -6,5 +8,5 @@ definePageMeta({
 })
 </script>
 <template>
-  <ComingSoon />
+  <AppVersionTable />
 </template>
