@@ -16,6 +16,7 @@
 
     <!-- Fallback value -->
     <PropertyGroup>
+      <SolutionVersion Condition="'$(SolutionVersion)' == '' and '$(SOLUTION_VERSION)' != ''">$(SOLUTION_VERSION)</SolutionVersion>
       <SolutionVersion Condition="'$(SolutionVersion)' == ''">development</SolutionVersion>
       <InformationalVersion>$(SolutionVersion)</InformationalVersion>
     </PropertyGroup>
