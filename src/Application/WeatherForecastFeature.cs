@@ -15,7 +15,7 @@ namespace DotNetNuxt.StarterKit.Application;
 /// <param name="timeProvider">Where to retrieve the current date/time</param>
 public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider timeProvider)
 {
-    private static readonly ActivitySource _activitySource = new(nameof(WeatherForecastFeature));
+    private static readonly ActivitySource _activitySource = new(typeof(WeatherForecastFeature).FullName!);
     private static readonly string[] Summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
     /// <summary>

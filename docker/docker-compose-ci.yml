@@ -9,6 +9,23 @@ services:
     environment:
       - DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS=true
     restart: unless-stopped
+  frontend:
+    build:
+      context: ../src/FrontEnd.Nuxt
+      dockerfile: ./docker/Dockerfile
+      args:
+          # Set the API base URL for the frontend to point to the backend service, from the
+          # perspective of JS code running in user's browser, *not* from the perspective of
+          # within the container.
+        - NUXT_PUBLIC_API_BASE_URL=http://localhost:5401
+        - NUXT_PUBLIC_SOLUTION_VERSION=${SOLUTION_VERSION:-'docker-compose'}
+        - NUXT_PUBLIC_APPLICATION_INSIGHTS_CONNECTION_STRING=${APPLICATIONINSIGHTS_CONNECTION_STRING:-}
+    restart: always
+    ports:
+      - '5400:80'
+    depends_on:
+      backend:
+        condition: service_healthy
   backend:
     build:
       context: ..

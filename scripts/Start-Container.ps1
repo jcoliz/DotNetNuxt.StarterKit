@@ -65,7 +65,7 @@ try {
     Write-Host "Opening application and dashboard..." -ForegroundColor Cyan
     Start-Process "http://localhost:18888"  # Aspire Dashboard
     Start-Process "http://localhost:5401/swagger"  # Backend API Inspector
-#TODO:    Start-Process "http://localhost:5400"   # Frontend
+    Start-Process "http://localhost:5400"   # Frontend
 }
 catch {
     Write-Error "Failed to start containers: $_"
