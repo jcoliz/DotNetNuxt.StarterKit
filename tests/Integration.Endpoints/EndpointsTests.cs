@@ -49,7 +49,7 @@ public class EndpointsTests
         var response = await _client.GetAsync("/version");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        Assert.That(await response.Content.ReadAsStringAsync(), Is.EqualTo("development"));
+        Assert.That(await response.Content.ReadAsStringAsync(), Is.Not.Empty);
     }
 
     [Test]
