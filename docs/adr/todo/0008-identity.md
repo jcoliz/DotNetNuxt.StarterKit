@@ -1,6 +1,6 @@
-# 0008. Identity system
+# 0008. Identity and API Authentication
 
-Date: 2025-11-13
+Date: 2026-10-02
 
 ## Status
 
@@ -8,105 +8,42 @@ Accepted
 
 ## Context
 
-### Question
+The frontend is a statically generated Nuxt SPA and the backend is a separately hosted ASP.NET Core API. The browser calls the API directly ([0001](../0001-spa-web-app.md), [0003](../0003-nuxt.md), [0007](../0007-backend-proxy-or-direct.md)). Applications built from this starter may need user accounts, but authentication is not required by every application and is not currently implemented in the starter.
 
-What software components and/or possible identity providers should we use for identity authentication and authorization?
-
-In ListsWebApp.V3, I rolled my own custom system. While I am happy with this, I've also received feedback that this is an unsafe practice, and should attempt to use as many off-the-shelf components as possible which have more security reviewers looking at them.
-
-Some questions that come to mind:
-
-* For the front-end, should I use NuxtAuth? This was recommended.
-* ASP.NET includes some identity components. Can I leverage those? I know them well. Can I combine them with NuxtAuth??
-* Should I use an external identity providers?
-* How do I handle authorization? Certain users will have access to certain lists, and this is information that is unique to the app, so I'll have to store it here.
-* Are there any examples of good existing systems that combine Nuxt frontend with ASP.NET backend for identity?
-
-### Analysis
-
-Based on the existing architecture (Nuxt 4 + ASP.NET Core + direct API calls) and the infrastructure decision to use static site generation ([ADR 0006](./0006-production-infrastructure.md)), we need a client-side authentication solution that works with static hosting.
-
-### Experience to date
-
-I have been using @sidebase/nuxt-auth and NuxtIdentity during development on YoFi.V3, and I have been happy with it.
+Authentication must work without a Nuxt server at request time. Authorization must remain a backend responsibility: hiding a control or route in the browser is not an access check.
 
 ## Decision
 
-I created a new library, [Nuxt Identity](https://github.com/jcoliz/NuxtIdentity) to collect the needed glue to bring together these battle-tested auth components while maintaining the current direct API call architecture.
+For applications that need local user accounts:
 
-- **[@sidebase/nuxt-auth](https://auth.sidebase.com/) with local provider** - Client-side authentication
-- **ASP.NET Core Identity** with JWT tokens for stateless authentication
+- Use **ASP.NET Core Identity** for account and credential management. Do not implement password storage, password verification, or account recovery from scratch.
+- Authenticate API requests with **short-lived bearer access tokens**. The API validates the token's signature, issuer, audience, and lifetime, and requires HTTPS outside local development.
+- Use a maintained Nuxt-compatible authentication integration for browser sign-in and session handling. The intended reference integration is [Nuxt Identity](https://github.com/jcoliz/NuxtIdentity) with [Nuxt Auth](https://auth.sidebase.com/); verify that the selected releases support the current Nuxt version and static deployment model before adopting them.
+- Keep token issuance, validation, refresh, revocation, and key management on the backend or in the chosen authentication integration. Follow that integration's documented secure storage model; do not put long-lived credentials or refresh tokens in `localStorage`.
+- Enforce authorization in the API for every protected operation. Global roles may be represented as claims; access to application-owned resources must be checked against current server-side ownership or membership data (see [0009](0009-accounts-and-tenancy.md)).
+- Treat external identity providers as an application decision. When required, prefer a standard OpenID Connect integration over custom provider protocols.
 
-Nuxt Identity aims to be a thin library, focused on moving data between .NET Identity and @sidebase/nuxt-auth. Here's what it's doing:
+The frontend may contain public configuration such as the API base URL, but never signing keys, client secrets, or other credentials. Authentication does not change the direct API and explicit CORS model in [0007](../0007-backend-proxy-or-direct.md).
 
-- JWT handling: Setting up JWT token creating and validation with security best practices.
-- API endpoints: Supplying the expected endpoints, translating those requests into .NET Identity system calls, and returning the results in the expected form.
-- Error handling: Surfacing RFC 7807 compliant error responses with ProblemDetails middleware for better API consistency.
-- Role/claim visibility: Surfacing user's roles and claims in auth tokens and in the user session.
-- Refresh tokens: .NET Identity doesn't handle refresh tokens at all, so a big part of this libraries work is storing and validating those with automatic rotation.
-
-### Addressing Specific Questions
-
-1. **NuxtAuth?** → Use **@sidebase/nuxt-auth with local provider** (modern, works with static generation)
-
-2. **ASP.NET Identity?** → **Yes, absolutely**. It's mature, well-tested, and provides the API endpoints for the frontend
-
-3. **External providers?** → **Later**. Start with built-in, add external providers when needed using ASP.NET Core's external login system
-
-4. **Authorization?** → Use **ASP.NET Core's policy-based authorization** with custom claims for list access. Store user-to-list mappings in your database using the three-role model (Owner/Editor/Viewer) as defined in ADR 0009.
-
-5. **Examples?** → The local provider pattern is common for SPA + API architectures. JWT tokens bridge frontend and backend auth
-
-### Why This Approach Works Well
-
-✅ **Security**: ASP.NET Core Identity is battle-tested with regular security updates  
-✅ **Familiar**: You already know ASP.NET Core Identity well  
-✅ **Stateless**: JWT tokens work perfectly with your direct API call architecture  
-✅ **Static Hosting Compatible**: No server-side session handling required  
-✅ **Cost Effective**: Works with Azure Static Web Apps infrastructure  
-✅ **Extensible**: Easy to add external providers later  
-✅ **Single Database**: User data stays in your database with your list data
-✅ **Authorization Ready**: Built-in support for roles and custom claims for list-level permissions
+> **Implementation status:** Authentication and authorization are not wired into this starter yet. The choice of ASP.NET Core Identity and the Nuxt integration is the intended reference path, not a claim that these protections are already present. A production implementation must include integration tests for sign-in, token lifecycle, unauthorized requests, and authorization boundaries.
 
 ## Consequences
 
-### What becomes easier:
+### Easier
 
-- **Security**: ASP.NET Core Identity is battle-tested with regular security updates
-- **Familiarity**: Leverages existing ASP.NET Core Identity knowledge
-- **Stateless Architecture**: JWT tokens work perfectly with direct API call architecture
-- **Static Hosting**: Compatible with Azure Static Web Apps cost-effective infrastructure
-- **Extensibility**: Easy to add external providers later
-- **Single Database**: User data stays in database with list data
-- **Authorization**: Built-in support for roles and custom claims for list access control as defined in ADR 0009
+- Account and credential handling use established framework components rather than application-specific password code.
+- The API remains the authority for protected data while the frontend can be hosted as static files.
+- A standard token boundary keeps the API independent of Nuxt's client-side session state.
 
-### What becomes more complex:
+### More difficult
 
-- **Client-Side Token Management**: All authentication state managed in browser
-- **Token Refresh**: Need to implement JWT token refresh logic client-side
-- **Custom Claims**: List-level authorization requires custom implementation
-- **Security Considerations**: Tokens stored client-side (though mitigated by secure cookies and short expiry)
-- **Testing**: Authentication flows need to be tested across both frontend and backend
-
-### Future Considerations:
-
-- External identity providers can be added incrementally
-- Session management handled by @sidebase/nuxt-auth local provider
-- Authorization policies can be extended for more granular permissions
-- Consider token refresh strategies for long-lived sessions
-
-## Architecture Compatibility
-
-This identity design is fully compatible with ADR 0006 (Production Infrastructure):
-
-- ✅ **Static Site Generation**: Local provider works without server-side handlers
-- ✅ **Azure Static Web Apps**: Client-side authentication compatible
-- ✅ **Cost Effective**: No additional hosting costs for authentication
-- ✅ **Direct API Calls**: Maintains the established architecture pattern
-
-The frontend will authenticate against the App Service backend using standard REST API calls, keeping the architecture simple, secure, and cost-effective.
+- The application must configure token issuance and validation correctly; ASP.NET Core Identity alone does not provide a secure API token system.
+- Browser token lifecycle, refresh, revocation, and cross-origin requests require careful design and testing.
+- Authorization policies and resource ownership checks are application-specific and must be maintained with the data model.
 
 ## Related Decisions
 
-- [ADR 0009: Multi-tenancy and List Sharing Model](0009-accounts-and-tenancy.md) - Defines the list structure, roles, and authorization policies that this identity system implements
-- [ADR 0006: Production Infrastructure](0006-production-infrastructure.md) - Azure infrastructure decisions
+- [0001. Single Page Web App](../0001-spa-web-app.md) - Separate frontend and API
+- [0003. Nuxt](../0003-nuxt.md) - Static frontend architecture
+- [0007. Backend Proxy or Direct](../0007-backend-proxy-or-direct.md) - Direct API calls and CORS
+- [0009. Tenant and Workspace Data Boundaries](0009-accounts-and-tenancy.md) - Optional data isolation and membership authorization
