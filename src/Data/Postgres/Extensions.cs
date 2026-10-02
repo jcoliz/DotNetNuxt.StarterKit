@@ -35,7 +35,7 @@ public static class DatabaseServiceExtensions
                 try
                 {
                     logger.LogDebug("Refreshing Entra managed identity token for PostgreSQL");
-                    var credential = new ManagedIdentityCredential();
+                    var credential = new ManagedIdentityCredential(ManagedIdentityId.SystemAssigned);
                     var token = await credential.GetTokenAsync(
                         new TokenRequestContext(
                             ["https://ossrdbms-aad.database.windows.net/.default"]), ct);

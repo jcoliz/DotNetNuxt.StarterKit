@@ -40,13 +40,13 @@ public class WeatherForecastFeatureTests
     }
 
     [Test]
-    public void ListForecasts_rejects_offset_below_minimum()
+    public async Task ListForecasts_rejects_offset_below_minimum()
     {
         // Given: a feature with an empty store
         var feature = new WeatherForecastFeature(new FakeDataProvider([]), new FakeTimeProvider(DateTimeOffset.UtcNow));
 
         // When: listing with an offset below the -30 minimum
-        var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+        var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
             () => feature.ListForecasts(offset: -31, count: 1));
 
         // Then: the request is rejected for the offset argument
@@ -54,13 +54,13 @@ public class WeatherForecastFeatureTests
     }
 
     [Test]
-    public void ListForecasts_rejects_count_below_one()
+    public async Task ListForecasts_rejects_count_below_one()
     {
         // Given: a feature with an empty store
         var feature = new WeatherForecastFeature(new FakeDataProvider([]), new FakeTimeProvider(DateTimeOffset.UtcNow));
 
         // When: listing with a count below the minimum of one
-        var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+        var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
             () => feature.ListForecasts(offset: 0, count: 0));
 
         // Then: the request is rejected for the count argument
@@ -68,13 +68,13 @@ public class WeatherForecastFeatureTests
     }
 
     [Test]
-    public void ListForecasts_rejects_count_plus_offset_above_maximum()
+    public async Task ListForecasts_rejects_count_plus_offset_above_maximum()
     {
         // Given: a feature with an empty store
         var feature = new WeatherForecastFeature(new FakeDataProvider([]), new FakeTimeProvider(DateTimeOffset.UtcNow));
 
         // When: listing with count plus offset exceeding the 30 maximum
-        var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+        var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
             () => feature.ListForecasts(offset: 25, count: 6));
 
         // Then: the request is rejected for the count argument

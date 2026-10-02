@@ -4,5 +4,6 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <DotNetVersion>10.0.12</DotNetVersion>
   </PropertyGroup>
 </Project>
