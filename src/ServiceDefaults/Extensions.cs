@@ -63,6 +63,7 @@ public static class Extensions
             {
                 tracing.AddSource(builder.Environment.ApplicationName)
                     .AddSource("DotNetNuxt.StarterKit.*")
+                    .AddSource("Npgsql")
                     .AddAspNetCoreInstrumentation(tracing =>
                         // Exclude health check requests from tracing
                         tracing.Filter = context =>
