@@ -1,5 +1,9 @@
 # DotNetNuxt Starter Kit
 
+[![Build](https://github.com/jcoliz/DotNetNuxt.StarterKit/actions/workflows/build.yaml/badge.svg)](https://github.com/jcoliz/DotNetNuxt.StarterKit/actions/workflows/build.yaml)
+![.NET 10](https://img.shields.io/badge/.NET-10-512BD4)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 DotNetNuxt Starter Kit is a reference implementation of our web application stack: a Nuxt frontend with an ASP.NET Core backend, PostgreSQL, and .NET Aspire for local orchestration. It provides a working foundation and conventions for applications built on this stack.
 
 ## Technology Stack
