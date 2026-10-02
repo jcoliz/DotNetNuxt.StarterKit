@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.6.0" />
-    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.6.0" />
-    <PackageReference Include="DotNetEnv" Version="3.2.0" />
+    <PackageReference Include="Aspire.Hosting.JavaScript" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="DotNetEnv" />
   </ItemGroup>
 
   <ItemGroup>

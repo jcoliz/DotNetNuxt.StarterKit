@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
 WORKDIR /App
 
 # Restore as distinct layer
-COPY Directory.Build.props .
+COPY Directory.Build.props Directory.Packages.props ./
 COPY src/Application/*.csproj src/Application/
 COPY src/Controllers/*.csproj src/Controllers/
 COPY src/Data/Postgres/*.csproj src/Data/Postgres/
