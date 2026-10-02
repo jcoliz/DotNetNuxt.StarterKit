@@ -8,7 +8,7 @@ const loginState = reactive<LoginStateModel>({
   isLoggedIn: false,
   name: undefined,
   photo: undefined,
-  profileRoute: '/profile',
+  profileRoute: '/identity',
   onLogin: () => {
     loginState.isLoggedIn = true
     loginState.name = 'User Name'

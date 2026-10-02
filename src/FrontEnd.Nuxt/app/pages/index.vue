@@ -16,7 +16,7 @@ definePageMeta({
       :details="['Demonstrates API calls to backend']"
     />
     <PageCard
-      to="/profile"
+      to="/identity"
       title="Profile"
       link-text="View user details"
       :details="['Profile details of current user']"

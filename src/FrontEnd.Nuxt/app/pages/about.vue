@@ -4,7 +4,7 @@ import App from '~/app.vue'
 definePageMeta({
   title: 'About',
   subtitle: 'Information about this app.',
-  order: 4,
+  order: 100,
 })
 </script>
 <template>
