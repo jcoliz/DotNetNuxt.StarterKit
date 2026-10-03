@@ -1,6 +1,6 @@
 using System;
 
-namespace DotNetNuxt.StarterKit.Controllers;
+namespace DotNetNuxt.StarterKit.Controllers.Attributes;
 
 /// <summary>
 /// Names the operation an endpoint performs, so any problem response it produces

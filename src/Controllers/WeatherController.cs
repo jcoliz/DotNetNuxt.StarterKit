@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DotNetNuxt.StarterKit.Application;
+using DotNetNuxt.StarterKit.Controllers.Attributes;
 using DotNetNuxt.StarterKit.Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,6 @@ public partial class WeatherController(WeatherForecastFeature feature, ILogger<W
     /// <returns>Current weather forecasts</returns>
     [HttpGet()]
     [ProblemContext("Failed to fetch weather forecasts")]
-    //[Authorize(Policy = "ListRead")]
     [ProducesResponseType(typeof(IReadOnlyCollection<WeatherForecast>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Get(
         [Range(-30, 30)] int offset = 0,
