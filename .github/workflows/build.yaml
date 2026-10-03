@@ -28,3 +28,30 @@ jobs:
       run: dotnet test ./tests/Unit --no-build --verbosity normal --collect:"XPlat Code Coverage"
     - name: Run Endpoints Integration Tests
       run: dotnet test ./tests/Integration.Endpoints --no-build --verbosity normal
+    - name: Build Docker Containers
+      shell: pwsh
+      run: ./scripts/Build-Container.ps1
+    - name: Install Playwright Chromium
+      shell: pwsh
+      run: ./tests/Functional/bin/Debug/net10.0/playwright.ps1 install --with-deps chromium
+    - name: Start Docker Containers
+      shell: pwsh
+      run: ./scripts/Start-Container.ps1 -NoBrowser
+    - name: Run Functional Tests
+      shell: pwsh
+      run: ./scripts/Run-Tests.ps1 -Functional -RunSettings tests/Functional/runsettings/container.runsettings
+    - name: Collect Docker Logs
+      if: always()
+      run: |
+        mkdir -p artifacts
+        docker compose -f docker/docker-compose-ci.yml logs --no-color > artifacts/docker.log 2>&1
+    - name: Stop Docker Containers
+      if: always()
+      shell: pwsh
+      run: ./scripts/Stop-Container.ps1
+    - name: Upload Docker Logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: docker-logs
+        path: artifacts/docker.log

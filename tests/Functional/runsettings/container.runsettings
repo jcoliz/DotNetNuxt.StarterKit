@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+	<TestRunParameters>
+		<Parameter name="webAppUrl" value="http://localhost:5400/" />
+		<Parameter name="apiUrl" value="http://localhost:5401/" />
+		<Parameter name="defaultTimeout" value="5000" />
+		<Parameter name="screenshotContext" value="container" />
+		<Parameter name="userName" value="Tester" />
+		<Parameter name="userPassword" value="{TESTPWORD}" />		
+		<Parameter name="environment" value="Container" />
+	</TestRunParameters>
+	<RunConfiguration>
+		<EnvironmentVariables>
+			<PWDEBUG>0</PWDEBUG>
+		</EnvironmentVariables>
+	</RunConfiguration>
+</RunSettings>

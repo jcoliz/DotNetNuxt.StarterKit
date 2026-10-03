@@ -16,6 +16,10 @@ Starts the Docker containers and opens the application in a browser.
 .\Start-Container.ps1 -Build
 Builds the containers first using Build-Container.ps1 if it exists, then starts the stack.
 
+.EXAMPLE
+.\Start-Container.ps1 -NoBrowser
+Starts the stack without opening browser windows, for CI or headless use.
+
 .NOTES
 The containers run in detached mode (-d) and the script waits (--wait) for them to be ready.
 Use Stop-Container.ps1 to stop the containers when finished.
@@ -27,7 +31,8 @@ https://docs.docker.com/compose/
 
 [CmdletBinding()]
 param(
-    [switch]$Build
+    [switch]$Build,
+    [switch]$NoBrowser
 )
 
 $ErrorActionPreference = "Stop"
@@ -61,11 +66,13 @@ try {
     }
 
     Write-Host "OK Containers started successfully" -ForegroundColor Green
-    Write-Host ""
-    Write-Host "Opening application and dashboard..." -ForegroundColor Cyan
-    Start-Process "http://localhost:18888"  # Aspire Dashboard
-    Start-Process "http://localhost:5401/swagger"  # Backend API Inspector
-    Start-Process "http://localhost:5400"   # Frontend
+    if (-not $NoBrowser) {
+        Write-Host ""
+        Write-Host "Opening application and dashboard..." -ForegroundColor Cyan
+        Start-Process "http://localhost:18888"
+        Start-Process "http://localhost:5401/swagger"
+        Start-Process "http://localhost:5400"
+    }
 }
 catch {
     Write-Error "Failed to start containers: $_"

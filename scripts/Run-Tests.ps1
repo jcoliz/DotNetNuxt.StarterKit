@@ -12,6 +12,7 @@
     Docker must be running when integration or functional tests are selected;
     the script checks this before building. Functional tests also require the
     application and any dependencies to already be running.
+    Use -RunSettings to override the selected projects' default runsettings.
 
 .EXAMPLE
     .\Run-Tests.ps1
@@ -32,6 +33,11 @@
     .\Run-Tests.ps1 -Functional
 
     Runs only functional tests against the running application.
+
+.EXAMPLE
+    .\Run-Tests.ps1 -Functional -RunSettings tests/Functional/runsettings/container.runsettings
+
+    Runs functional tests with the Chromium container settings.
 #>
 
 [CmdletBinding(DefaultParameterSetName = "Default")]
@@ -43,7 +49,11 @@ param(
     [switch]$Integration,
 
     [Parameter(Mandatory, ParameterSetName = "Functional")]
-    [switch]$Functional
+    [switch]$Functional,
+
+    [Parameter()]
+    [ValidateNotNullOrEmpty()]
+    [string]$RunSettings
 )
 
 $ErrorActionPreference = "Stop"
@@ -52,6 +62,10 @@ $repoRoot = Split-Path $PSScriptRoot -Parent
 Push-Location $repoRoot
 
 try {
+    if ($RunSettings) {
+        $RunSettings = (Resolve-Path -LiteralPath $RunSettings -ErrorAction Stop).Path
+    }
+
     $suites = switch ($PSCmdlet.ParameterSetName) {
         "Unit" { "Unit" }
         "Integration" { "Integration" }
@@ -97,7 +111,11 @@ try {
     $results = @(
         foreach ($testProject in $testProjects) {
             Write-Host "`nRunning $($testProject.Suite) tests: $($testProject.Project.Name)..." -ForegroundColor Cyan
-            $testOutput = dotnet test $testProject.Project.FullName --no-build 2>&1
+            $testArguments = @("test", $testProject.Project.FullName, "--no-build")
+            if ($RunSettings) {
+                $testArguments += @("--settings", $RunSettings)
+            }
+            $testOutput = dotnet @testArguments 2>&1
             $testExitCode = $LASTEXITCODE
             $testOutput | ForEach-Object { Write-Host $_ }
 
