@@ -21,3 +21,15 @@ Feature: Selected set of pages load successfully
         Then backend version is visible
         And frontend version is visible
         And both versions match
+
+    @explicit:wip
+    Scenario Outline: Home page cards navigate to expected pages
+        Given user in on the Home page
+        When user selects the <card> card
+        Then the user lands on the <page> page
+
+        Examples:
+            | card    | page    |
+            | Weather | Weather |
+            | Profile | Profile |
+            | About   | About   |
