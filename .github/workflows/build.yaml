@@ -28,9 +28,11 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Run Unit Tests
-      run: dotnet test ./tests/Unit --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory ./artifacts/test-results/unit
-    - name: Run Endpoints Integration Tests
-      run: dotnet test ./tests/Integration.Endpoints --no-build --verbosity normal --logger trx --results-directory ./artifacts/test-results/integration
+      shell: pwsh
+      run: ./scripts/Run-Tests.ps1 -Unit -NoBuild -CollectCoverage -Verbosity normal -ResultsDirectory artifacts/test-results/unit
+    - name: Run Integration Tests
+      shell: pwsh
+      run: ./scripts/Run-Tests.ps1 -Integration -NoBuild -Verbosity normal -ResultsDirectory artifacts/test-results/integration
     - name: Build Docker Containers
       shell: pwsh
       run: ./scripts/Build-Container.ps1
@@ -42,7 +44,7 @@ jobs:
       run: ./scripts/Start-Container.ps1 -NoBrowser
     - name: Run Functional Tests
       shell: pwsh
-      run: ./scripts/Run-Tests.ps1 -Functional -RunSettings tests/Functional/runsettings/container.runsettings -ResultsDirectory artifacts/test-results/functional
+      run: ./scripts/Run-Tests.ps1 -Functional -NoBuild -RunSettings tests/Functional/runsettings/container.runsettings -ResultsDirectory artifacts/test-results/functional
     - name: Collect Docker Logs
       if: always()
       run: |

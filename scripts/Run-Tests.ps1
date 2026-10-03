@@ -14,6 +14,8 @@
     application and any dependencies to already be running.
     Use -RunSettings to override the selected projects' default runsettings.
     Use -ResultsDirectory to save TRX reports for each selected test project.
+    Use -NoBuild to reuse an existing build and -CollectCoverage to collect
+    XPlat code coverage. Use -Verbosity to control test runner output.
 
 .EXAMPLE
     .\Run-Tests.ps1
@@ -44,6 +46,11 @@
     .\Run-Tests.ps1 -Unit -ResultsDirectory artifacts/test-results/unit
 
     Runs unit tests and saves TRX reports in the specified directory.
+
+.EXAMPLE
+    .\Run-Tests.ps1 -Unit -NoBuild -CollectCoverage -Verbosity normal -ResultsDirectory artifacts/test-results/unit
+
+    Runs previously built unit tests with coverage and TRX reports for CI.
 #>
 
 [CmdletBinding(DefaultParameterSetName = "Default")]
@@ -63,7 +70,14 @@ param(
 
     [Parameter()]
     [ValidateNotNullOrEmpty()]
-    [string]$ResultsDirectory
+    [string]$ResultsDirectory,
+
+    [switch]$NoBuild,
+
+    [switch]$CollectCoverage,
+
+    [ValidateSet("quiet", "minimal", "normal", "detailed", "diagnostic")]
+    [string]$Verbosity = "minimal"
 )
 
 $ErrorActionPreference = "Stop"
@@ -113,18 +127,23 @@ try {
 
     Write-Host "Running $($suites -join ' and ') tests..." -ForegroundColor Cyan
 
-    Write-Host "`nBuilding solution..." -ForegroundColor Cyan
-    dotnet build
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "ERROR Build failed" -ForegroundColor Red
-        exit 1
+    if (-not $NoBuild) {
+        Write-Host "`nBuilding solution..." -ForegroundColor Cyan
+        dotnet build
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "ERROR Build failed" -ForegroundColor Red
+            exit 1
+        }
+        Write-Host "OK Build succeeded" -ForegroundColor Green
     }
-    Write-Host "OK Build succeeded" -ForegroundColor Green
 
     $results = @(
         foreach ($testProject in $testProjects) {
             Write-Host "`nRunning $($testProject.Suite) tests: $($testProject.Project.Name)..." -ForegroundColor Cyan
-            $testArguments = @("test", $testProject.Project.FullName, "--no-build")
+            $testArguments = @("test", $testProject.Project.FullName, "--no-build", "--verbosity", $Verbosity)
+            if ($CollectCoverage) {
+                $testArguments += @("--collect", "XPlat Code Coverage")
+            }
             if ($RunSettings) {
                 $testArguments += @("--settings", $RunSettings)
             }
@@ -137,7 +156,12 @@ try {
 
             $testCount = 0
             $duration = "N/A"
-            if (($testOutput -join "`n") -match 'Total:\s+(\d+).*?Duration:\s+([^\r\n]+?)(?:\s+-\s+|\r?\n|$)') {
+            $outputText = $testOutput -join "`n"
+            if ($outputText -match 'Total:\s+(\d+).*?Duration:\s+([^\r\n]+?)(?:\s+-\s+|\r?\n|$)') {
+                $testCount = [int]$Matches[1]
+                $duration = $Matches[2].Trim()
+            }
+            elseif ($outputText -match '(?s)Total tests:\s*(\d+).*?Total time:\s*([^\r\n]+)') {
                 $testCount = [int]$Matches[1]
                 $duration = $Matches[2].Trim()
             }
