@@ -16,7 +16,7 @@ builder.AddJavaScriptApp("frontend-nuxt", "../FrontEnd.Nuxt")
     .WithPnpm()
     .WithReference(backend)
     .WithEnvironment("NUXT_PUBLIC_API_BASE_URL", backend.GetEndpoint("http"))
-    .WithEnvironment("NUXT_PUBLIC_SOLUTION_VERSION", "Aspire")
+    .WithEnvironment("NUXT_PUBLIC_SOLUTION_VERSION", "development")
     .WithHttpEndpoint(port: 5284, env: "PORT")
     .WithEnvironment("NUXT_PUBLIC_APPLICATION_INSIGHTS_CONNECTION_STRING", appInsightsConnectionString ?? "")
     .WithExternalHttpEndpoints();
