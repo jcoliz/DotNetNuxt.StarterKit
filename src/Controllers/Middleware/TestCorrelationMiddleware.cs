@@ -9,6 +9,9 @@ namespace DotNetNuxt.StarterKit.Controllers.Middleware;
 /// <summary>
 /// Enriches request logs and activity tags with test details supplied in HTTP headers.
 /// </summary>
+/// <remarks>
+/// Domain-agnostic. Could be broken out into separate reusable middleware for test correlation.
+/// </remarks>
 /// <param name="next">The next middleware in the request pipeline</param>
 /// <param name="logger">Logger used to scope downstream request logs</param>
 public class TestCorrelationMiddleware(RequestDelegate next, ILogger<TestCorrelationMiddleware> logger)

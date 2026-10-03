@@ -11,6 +11,8 @@ namespace DotNetNuxt.StarterKit.BackEnd.Startup;
 /// Returns Healthy when the database is reachable, Unhealthy otherwise.
 /// </summary>
 /// <remarks>
+/// Domain-agnostic. Could be broken out into separate reusable library.
+/// 
 /// Registered with the "db" tag so it can be exposed on a dedicated
 /// /health/db endpoint without affecting the main /health probe.
 /// </remarks>

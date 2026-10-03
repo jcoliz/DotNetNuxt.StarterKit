@@ -5,6 +5,9 @@ namespace DotNetNuxt.StarterKit.BackEnd.Options;
 /// <summary>
 /// Configuration options for program startup
 /// </summary>
+/// <remarks>
+/// Domain-agnostic. Could be broken out into separate reusable library.
+/// </remarks>
 public record StartupOptions
 {
     public static readonly string Section = "Startup";

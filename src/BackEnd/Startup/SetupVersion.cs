@@ -10,6 +10,9 @@ public static partial class __SetupVersion
     /// <summary>
     /// Get app version from the running assembly
     /// </summary>
+    /// <remarks>
+    /// Domain-agnostic. Could be broken out into separate reusable library.
+    /// </remarks>
     /// <param name="builder"></param>
     /// <param name="logger"></param>
     /// <returns>Informational version, or "unknown"</returns>

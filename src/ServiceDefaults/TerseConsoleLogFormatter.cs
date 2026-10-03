@@ -14,8 +14,10 @@ namespace DotNetNuxt.StarterKit.ServiceDefaults;
 /// Formats logs with just the information we want in local debugging
 /// </summary>
 /// <remarks>
-/// NOTE: This class is not particularly application-specific. It does look
-/// for 'ActionName' in the scope, which will be in all ASPNET requests.
+/// Domain-agnostic. Could be broken out into separate reusable library.
+///
+/// One thing to be aware of, we do use the TestName which is set by
+/// the test correlation middleware during test execution.
 /// </remarks>
 public sealed partial class TerseConsoleLogFormatter : ConsoleFormatter, IDisposable
 {

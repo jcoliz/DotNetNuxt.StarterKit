@@ -9,6 +9,8 @@ namespace DotNetNuxt.StarterKit.Controllers;
 /// Public version endpoint
 /// </summary>
 /// <remarks>
+/// Domain-agnostic. Could be broken out into separate reusable library.
+/// 
 /// This is a controller and not a simple endpoint so it gets picked up by the frontend API generator.
 /// </remarks>
 /// <param name="options">Where to get version from</param>
