@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Application\DotNetNuxt.StarterKit.Application.csproj" />
+    <ProjectReference Include="..\..\src\Controllers\DotNetNuxt.StarterKit.Controllers.csproj" />
   </ItemGroup>
 
 </Project>

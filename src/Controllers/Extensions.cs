@@ -38,12 +38,13 @@ public static class ControllersExtensions
     }
 
     /// <summary>
-    /// Wire up exception handling middleware into the request pipeline
+    /// Wire up test context and exception handling middleware into the request pipeline
     /// </summary>
     /// <param name="app">Target to add into</param>
     /// <returns>The same application builder, for chaining</returns>
     public static IApplicationBuilder UseWebApiServices(this IApplicationBuilder app)
     {
+        app.UseMiddleware<TestCorrelationMiddleware>();
         app.UseExceptionHandler();
 
         return app;
