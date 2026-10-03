@@ -1,4 +1,5 @@
 using DotNetNuxt.StarterKit.Controllers;
+using DotNetNuxt.StarterKit.Controllers.Attributes;
 using DotNetNuxt.StarterKit.Controllers.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;

@@ -7,24 +7,23 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using DotNetNuxt.StarterKit.ServiceDefaults;
 
 ILogger? logger = default;
-ILoggerFactory? startupLoggerFactory = default;
+ILoggerFactory? bootLoggerFactory = default;
 try
 {
     //
     // Set up Boot logger
     //
 
-    startupLoggerFactory = LoggerFactory.Create(builder =>
+    bootLoggerFactory = LoggerFactory.Create(builder =>
     {
         builder.SetMinimumLevel(LogLevel.Debug);
-        // TODO: Add Terse logger
-        // builder.AddTerseConsoleLogFormatter(options => options.IncludeScopes = false);
-        // builder.AddConsole(x => x.FormatterName = "TerseConsole");
+        builder.AddTerseConsoleLogFormatter(options => options.IncludeScopes = false);
         builder.AddConsole();
     });
-    logger = startupLoggerFactory.CreateLogger("Boot");
+    logger = bootLoggerFactory.CreateLogger("Boot");
     logger.LogInformation("Starting {App}", Assembly.GetExecutingAssembly().FullName);
 
     //
@@ -54,6 +53,8 @@ try
     builder.AddServiceDefaults();
 
     builder.SetupDatabase(logger);
+
+    builder.Logging.AddTerseConsoleLogFormatter(options => options.IncludeScopes = false);
 
     var version = builder.GetVersion(logger);
     builder.Services.AddWebApiServices(version);
@@ -140,7 +141,7 @@ catch (Exception ex)
 }
 finally
 {
-    startupLoggerFactory?.Dispose();
+    bootLoggerFactory?.Dispose();
 }
 
 
