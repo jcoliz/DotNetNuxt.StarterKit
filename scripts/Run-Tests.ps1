@@ -13,6 +13,7 @@
     the script checks this before building. Functional tests also require the
     application and any dependencies to already be running.
     Use -RunSettings to override the selected projects' default runsettings.
+    Use -ResultsDirectory to save TRX reports for each selected test project.
 
 .EXAMPLE
     .\Run-Tests.ps1
@@ -38,6 +39,11 @@
     .\Run-Tests.ps1 -Functional -RunSettings tests/Functional/runsettings/container.runsettings
 
     Runs functional tests with the Chromium container settings.
+
+.EXAMPLE
+    .\Run-Tests.ps1 -Unit -ResultsDirectory artifacts/test-results/unit
+
+    Runs unit tests and saves TRX reports in the specified directory.
 #>
 
 [CmdletBinding(DefaultParameterSetName = "Default")]
@@ -53,7 +59,11 @@ param(
 
     [Parameter()]
     [ValidateNotNullOrEmpty()]
-    [string]$RunSettings
+    [string]$RunSettings,
+
+    [Parameter()]
+    [ValidateNotNullOrEmpty()]
+    [string]$ResultsDirectory
 )
 
 $ErrorActionPreference = "Stop"
@@ -64,6 +74,9 @@ Push-Location $repoRoot
 try {
     if ($RunSettings) {
         $RunSettings = (Resolve-Path -LiteralPath $RunSettings -ErrorAction Stop).Path
+    }
+    if ($ResultsDirectory) {
+        $ResultsDirectory = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ResultsDirectory)
     }
 
     $suites = switch ($PSCmdlet.ParameterSetName) {
@@ -114,6 +127,9 @@ try {
             $testArguments = @("test", $testProject.Project.FullName, "--no-build")
             if ($RunSettings) {
                 $testArguments += @("--settings", $RunSettings)
+            }
+            if ($ResultsDirectory) {
+                $testArguments += @("--logger", "trx;LogFilePrefix=$($testProject.Project.BaseName)", "--results-directory", $ResultsDirectory)
             }
             $testOutput = dotnet @testArguments 2>&1
             $testExitCode = $LASTEXITCODE

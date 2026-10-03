@@ -10,6 +10,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
 
     steps:
     - name: Checkout repository with submodules
@@ -25,9 +28,9 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Run Unit Tests
-      run: dotnet test ./tests/Unit --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      run: dotnet test ./tests/Unit --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory ./artifacts/test-results/unit
     - name: Run Endpoints Integration Tests
-      run: dotnet test ./tests/Integration.Endpoints --no-build --verbosity normal
+      run: dotnet test ./tests/Integration.Endpoints --no-build --verbosity normal --logger trx --results-directory ./artifacts/test-results/integration
     - name: Build Docker Containers
       shell: pwsh
       run: ./scripts/Build-Container.ps1
@@ -39,7 +42,7 @@ jobs:
       run: ./scripts/Start-Container.ps1 -NoBrowser
     - name: Run Functional Tests
       shell: pwsh
-      run: ./scripts/Run-Tests.ps1 -Functional -RunSettings tests/Functional/runsettings/container.runsettings
+      run: ./scripts/Run-Tests.ps1 -Functional -RunSettings tests/Functional/runsettings/container.runsettings -ResultsDirectory artifacts/test-results/functional
     - name: Collect Docker Logs
       if: always()
       run: |
@@ -55,3 +58,19 @@ jobs:
       with:
         name: docker-logs
         path: artifacts/docker.log
+    - name: Publish Test Report
+      if: ${{ always() && hashFiles('artifacts/test-results/**/*.trx') != '' }}
+      uses: dorny/test-reporter@v3
+      with:
+        name: .NET Test Results
+        path: artifacts/test-results/**/*.trx
+        reporter: dotnet-trx
+        use-actions-summary: 'true'
+        list-tests: all
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: artifacts/test-results/
+        if-no-files-found: ignore
