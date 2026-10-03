@@ -19,6 +19,11 @@ const forecasts = ref<api.IWeatherForecast[]>()
 const isLoading = ref(false)
 
 /**
+ * Whether the data has finished loading
+ */
+const hasLoaded = ref(false)
+
+/**
  * Client for communicating with server
  */
 const client = useApiClient(api.WeatherClient)
@@ -29,12 +34,14 @@ const client = useApiClient(api.WeatherClient)
 async function getData() {
   forecasts.value = undefined
   isLoading.value = true
+  hasLoaded.value = false
 
   try {
     // Errors are reported to problem details by the client; result is undefined on failure
     forecasts.value = await client.get(0, 5)
   } finally {
     isLoading.value = false
+    hasLoaded.value = true
   }
 }
 
@@ -52,7 +59,7 @@ onMounted(() => {
     <table
       v-else
       class="table"
-      data-test-id="forecasts"
+      data-test-id="results"
     >
       <thead>
         <tr>
@@ -76,5 +83,9 @@ onMounted(() => {
         </tr>
       </tbody>
     </table>
+    <hr
+      v-if="hasLoaded"
+      data-test-id="has-loaded"
+    />
   </div>
 </template>

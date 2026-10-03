@@ -10,3 +10,7 @@ Feature: Selected set of pages load successfully
     Scenario: Site loads
         When user launches the site
         Then page loaded ok
+
+    Scenario: Weather forecasts shown
+        When user visits the Weather page
+        Then 5 forecasts are visible
