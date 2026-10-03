@@ -25,7 +25,7 @@ try
         builder.AddConsole();
     });
     logger = startupLoggerFactory.CreateLogger("Boot");
-    logger.LogInformation("Starting {App}",Assembly.GetExecutingAssembly().FullName);
+    logger.LogInformation("Starting {App}", Assembly.GetExecutingAssembly().FullName);
 
     //
     // *** CREATE BUILDER ***
@@ -83,7 +83,7 @@ try
             "Database-dependent API calls will fail until the database is available.");
     }
 
-    app.UseExceptionHandler();  // This enables ProblemDetails for exceptions
+    app.UseWebApiServices();
     app.UseStatusCodePages(); // This enables ProblemDetails for status codes like 404
 
     // This is typically only done in the local and CI-built container
