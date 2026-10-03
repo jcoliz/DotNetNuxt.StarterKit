@@ -23,6 +23,9 @@
     <Project Path="src/ServiceDefaults/DotNetNuxt.StarterKit.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/tests/" />
+  <Folder Name="/tests/Functional/">
+    <Project Path="tests/Functional/DotNetNuxt.StarterKit.Tests.Functional.csproj" />
+  </Folder>
   <Folder Name="/tests/Integration.Endpoints/">
     <Project Path="tests/Integration.Endpoints/DotNetNuxt.Tests.Integration.Endpoints.csproj" />
   </Folder>

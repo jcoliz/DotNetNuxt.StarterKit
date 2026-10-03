@@ -2,10 +2,16 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
+    <RunSettingsFilePath>$(MSBuildProjectDirectory)\runsettings\container-msedge.runsettings</RunSettingsFilePath>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector"/>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Gherkin.Generator" />
+    <PackageReference Include="Gherkin.Generator.Utils" />
+    <PackageReference Include="jcoliz.Net.FunctionalTests" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit.Analyzers" />
@@ -14,6 +20,13 @@
 
   <ItemGroup>
     <Using Include="NUnit.Framework" />
+    <Using Include="System.Threading.Tasks" />
+    <Using Include="System" />
   </ItemGroup>
+
+  <!-- Generated tests -->
+  <ItemGroup>
+    <AdditionalFiles Include="Features\*.feature" />
+  </ItemGroup>  
 
 </Project>

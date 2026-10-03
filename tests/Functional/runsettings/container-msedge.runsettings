@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+	<TestRunParameters>
+		<Parameter name="webAppUrl" value="http://localhost:5400/" />
+		<Parameter name="apiUrl" value="http://localhost:5401/" />
+		<Parameter name="defaultTimeout" value="5000" />
+		<Parameter name="screenshotContext" value="container-msedge" />
+		<Parameter name="userName" value="Tester" />
+		<Parameter name="userPassword" value="{TESTPWORD}" />
+		<Parameter name="environment" value="Container" />
+	</TestRunParameters>
+	<Playwright>
+		<BrowserName>chromium</BrowserName>
+		<LaunchOptions>
+			<Channel>msedge</Channel>
+			<Headless>true</Headless> <!-- Optional: set to true or remove for headless mode -->
+		</LaunchOptions>
+	</Playwright>
+	 <RunConfiguration>
+	   <EnvironmentVariables>
+	     <PWDEBUG>0</PWDEBUG>
+	   </EnvironmentVariables>
+	 </RunConfiguration>
+</RunSettings>
