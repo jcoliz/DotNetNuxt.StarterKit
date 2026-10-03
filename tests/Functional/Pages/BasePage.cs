@@ -46,6 +46,24 @@ public class BasePage(IPage _page) : PageObjectModel(_page)
     /// </summary>
     public virtual Task<IResponse?> NavigateToUrlAsync() => throw new NotImplementedException();
 
+    /// <summary>
+    /// Determines whether we are currently at this page, by checking for the presence of a unique element or other heuristic. Used to determine whether navigation was successful.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public virtual Task<bool> IsAtAsync() => throw new NotImplementedException();
+
+    protected Task<bool> IsAtPathAsync(string path)
+    {
+        var isAtPath = Uri.TryCreate(Page!.Url, UriKind.Absolute, out var currentUri)
+            && string.Equals(
+                currentUri.AbsolutePath.TrimEnd('/'),
+                path.TrimEnd('/'),
+                StringComparison.Ordinal);
+
+        return Task.FromResult(isAtPath);
+    }
+
     #endregion
 
     #region Page State

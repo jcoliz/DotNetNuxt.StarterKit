@@ -15,16 +15,14 @@ Feature: Selected set of pages load successfully
         When user visits the Weather page
         Then 5 forecasts are visible
 
-    @explicit:wip
     Scenario: App information shown
         When user visits the About page
         Then backend version is visible
         And frontend version is visible
         And both versions match
 
-    @explicit:wip
     Scenario Outline: Home page cards navigate to expected pages
-        Given user in on the Home page
+        Given user is on the Home page
         When user selects the <card> card
         Then the user lands on the <page> page
 

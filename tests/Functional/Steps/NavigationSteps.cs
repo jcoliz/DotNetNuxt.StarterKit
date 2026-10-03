@@ -42,16 +42,21 @@ public class NavigationSteps(IBaseStepCapabilities context) : BuiltInSteps((cont
     [Provides("CurrentPage", "the page object which the user is currently working with in the test context")]
     public async Task UserNavigatesToAnyPage(string name)
     {
-        BasePage model = name switch
-        {
-            "Home" => context.GetOrCreatePage<HomePage>(),
-            "Weather" => context.GetOrCreatePage<WeatherPage>(),
-            _ => throw new NotImplementedException($"Navigation to page '{name}' is not implemented.")
-        };
+        var model = GetPage(name);
 
         context.ObjectStore.Add("CurrentPage", model);
         var result = await model.NavigateToUrlAsync();
         context.ObjectStore.Add(result!);
+    }
+
+    /// <summary>
+    /// When user selects a home page card
+    /// </summary>
+    [When("user selects the {card} card")]
+    public async Task UserSelectsTheCard(string card)
+    {
+        var model = context.ObjectStore.Get<HomePage>();
+        await model.SelectCardAsync(card);
     }
 
     #endregion
@@ -77,5 +82,62 @@ public class NavigationSteps(IBaseStepCapabilities context) : BuiltInSteps((cont
         Assert.That(actual, Is.EqualTo(count), $"Expected {count} forecasts, but found {actual}.");
     }
 
+    /// <summary>
+    /// Then backend version is visible
+    /// </summary>
+    [Then("backend version is visible")]
+    public async Task BackendVersionIsVisible()
+    {
+        var pageModel = context.ObjectStore.Get<AboutPage>();
+
+        Assert.That(await pageModel.IsBackendVersionVisibleAsync(), Is.True);
+    }
+
+    /// <summary>
+    /// Then frontend version is visible
+    /// </summary>
+    [Then("frontend version is visible")]
+    public async Task FrontendVersionIsVisible()
+    {
+        var pageModel = context.ObjectStore.Get<AboutPage>();
+
+        Assert.That(await pageModel.IsFrontendVersionVisibleAsync(), Is.True);
+    }
+
+    /// <summary>
+    /// Then both versions match
+    /// </summary>
+    [Then("both versions match")]
+    public async Task BothVersionsMatch()
+    {
+        var pageModel = context.ObjectStore.Get<AboutPage>();
+
+        Assert.That(
+            await pageModel.GetBackendVersionAsync(),
+            Is.EqualTo(await pageModel.GetFrontendVersionAsync()));
+    }
+
+    /// <summary>
+    /// Then the user lands on the expected page
+    /// </summary>
+    [Then("the user lands on the {page} page")]
+    public async Task TheUserLandsOnThePage(string page)
+    {
+        var model = GetPage(page);
+        context.ObjectStore.Add("CurrentPage", model);
+
+        await model.WaitForPageReadyAsync();
+        Assert.That(await model.IsAtAsync(), Is.True, $"Expected to land on the {page} page.");
+    }
+
     #endregion
+
+    private BasePage GetPage(string name) => name switch
+    {
+        "Home" => context.GetOrCreatePage<HomePage>(),
+        "Weather" => context.GetOrCreatePage<WeatherPage>(),
+        "Profile" => context.GetOrCreatePage<ProfilePage>(),
+        "About" => context.GetOrCreatePage<AboutPage>(),
+        _ => throw new NotImplementedException($"Navigation to page '{name}' is not implemented.")
+    };
 }

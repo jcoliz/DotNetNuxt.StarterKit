@@ -7,6 +7,8 @@ namespace DotNetNuxt.StarterKit.Tests.Functional.Pages;
 /// </summary>
 public class WeatherPage : BasePage
 {
+    private const string UrlPath = "/weather";
+
     public ILocator ResultsTable => Page!.GetByTestId("results");
     public ILocator HasLoaded => Page!.GetByTestId("has-loaded");
     public ILocator Forecasts => ResultsTable.Locator("tbody tr");
@@ -23,10 +25,12 @@ public class WeatherPage : BasePage
     /// </summary>
     public async override Task<IResponse?> NavigateToUrlAsync()
     {
-        var result = await Page!.GotoAsync("/weather");
+        var result = await Page!.GotoAsync(UrlPath);
         await WaitForPageReadyAsync();
         return result;
     }
+
+    public override Task<bool> IsAtAsync() => IsAtPathAsync(UrlPath);
 
     /// <summary>
     /// Waits for the page to be ready for user interaction
