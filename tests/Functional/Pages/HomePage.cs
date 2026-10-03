@@ -13,14 +13,14 @@ public class HomePage : BasePage
     public ILocator AboutCard => Page!.GetByTestId("about-card");
 
     /// <summary>
-    /// Executes HomePage.
+    /// Constructor
     /// </summary>
     public HomePage(IPage _page) : base(_page)
     {
     }
 
     /// <summary>
-    /// Executes NavigateToUrlAsync.
+    /// Navigates to the home page via address bar
     /// </summary>
     public async override Task<IResponse?> NavigateToUrlAsync()
     {
@@ -30,7 +30,7 @@ public class HomePage : BasePage
     }
 
     /// <summary>
-    /// Waits for the page to be ready
+    /// Waits for the page to be ready for user interaction
     /// </summary>
     public async override Task WaitForPageReadyAsync(float timeout = 5000)
     {

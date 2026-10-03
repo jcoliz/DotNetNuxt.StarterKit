@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using jcoliz.FunctionalTests;
 using Microsoft.Playwright;
@@ -8,33 +7,33 @@ namespace DotNetNuxt.StarterKit.Tests.Functional.Pages;
 /// <summary>
 /// Represents the common features and functionality shared by all page objects.
 /// </summary>
-public class BasePage(IPage _page): PageObjectModel(_page)
+public class BasePage(IPage _page) : PageObjectModel(_page)
 {
     #region Properties
 
     /// <summary>
-    /// Gets a value.
+    /// Current page under test.
     /// </summary>
     public IPage? Page { get; set; } = _page;
 
     /// <summary>
-    /// Executes Locator.
+    /// Page header locator.
     /// </summary>
     public ILocator Header => Page!.Locator("#PageHeader");
     /// <summary>
-    /// Executes Locator.
+    /// Page title locator.
     /// </summary>
     public ILocator PageTitle => Header.Locator("h1");
     /// <summary>
-    /// Executes GetByTestId.
+    /// Page subtitle locator.
     /// </summary>
     public ILocator PageSubTitle => Header.GetByTestId("Subtitle");
     /// <summary>
-    /// Executes GetByTestId.
+    /// Problem details section locator.
     /// </summary>
     public ILocator ProblemDetails => Page!.GetByTestId("problem-details-viewer");
     /// <summary>
-    /// Executes GetByTestId.
+    /// Problem details detail display locator.
     /// </summary>
     public ILocator ProblemDetailsDetailDisplay => ProblemDetails.GetByTestId("detail-display");
 
@@ -47,20 +46,6 @@ public class BasePage(IPage _page): PageObjectModel(_page)
     /// </summary>
     public virtual Task<IResponse?> NavigateToUrlAsync() => throw new NotImplementedException();
 
-    /// <summary>
-    /// Navigate to this page using the browser address bar, but don't confirm successful
-    /// </summary>
-    public virtual Task<IResponse?> TryNavigateToUrlAsync() => throw new NotImplementedException();
-
-    /// <summary>
-    /// Executes ReloadPageAsync.
-    /// </summary>
-    public async override Task ReloadPageAsync()
-    {
-        await Page!.ReloadAsync();
-        await WaitForPageReadyAsync();
-    }
-
     #endregion
 
     #region Page State
@@ -70,25 +55,11 @@ public class BasePage(IPage _page): PageObjectModel(_page)
     /// </summary>
     public virtual Task WaitForPageReadyAsync(float timeout = 5000) => throw new NotImplementedException();
 
-    /// <summary>
-    /// Determines whether we are currently at this page, by checking for the presence of a unique element or other heuristic. Used to determine whether navigation was successful.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public virtual Task<bool> IsAtAsync() => throw new NotImplementedException();
-
-    /// <summary>
-    /// Executes WaitUntilLoaded.
-    /// </summary>
-    public async Task WaitUntilLoaded()
-    {
-        await Page!.GetByTestId("BaseSpinner").WaitForAsync(new LocatorWaitForOptions() { State = WaitForSelectorState.Hidden });
-    }
-
     #endregion
 
     /// <summary>
-    /// Executes GetProblemDetailsTextAsync.
+    /// Gets the text content of the problem details section.
+    /// Waits for the problem details to be visible before retrieving the text.
     /// </summary>
     public async Task<string> GetProblemDetailsTextAsync()
     {
@@ -97,17 +68,6 @@ public class BasePage(IPage _page): PageObjectModel(_page)
     }
 
     #region API Helpers
-
-    // TODO: Work out duplication with base functional test versions of these!
-    /// <summary>
-    /// Executes WaitForApi.
-    /// </summary>
-    public async Task WaitForApi(Func<Task> action, string? endpoint = null)
-    {
-        var response = await Page!.RunAndWaitForResponseAsync(action, endpoint ?? "/api/**");
-        TestContext.Out.WriteLine("API request {0}", response.Url);
-        Assert.That(response!.Ok, Is.True);
-    }
 
     /// <summary>
     /// Executes an action and waits for a matching API response (regex variant)
