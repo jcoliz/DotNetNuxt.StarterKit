@@ -13,6 +13,8 @@ namespace DotNetNuxt.StarterKit.Entities.Abstractions;
 /// <remarks>
 /// Platform- and storage-agnostic interface for all data stored in the system.
 /// Note that we actively use multiple different data stores based on context
+/// 
+/// Domain-agnostic. Could be broken out into separate reusable library.
 /// </remarks>
 public interface IDataProvider
 {
@@ -36,7 +38,7 @@ public interface IDataProvider
     /// <param name="navigationPropertyPath"></param>
     /// <returns></returns>
     IQueryable<TEntity> GetIncluding<TEntity, TProperty>(Expression<Func<TEntity, TProperty>> navigationPropertyPath) where TEntity : class, IModel;
-//                => base.Set<TEntity>().Include(navigationPropertyPath);
+    //                => base.Set<TEntity>().Include(navigationPropertyPath);
 
     #endregion
 
@@ -53,25 +55,25 @@ public interface IDataProvider
     /// </summary>
     /// <param name="items">Items to add</param>
     void AddRange(IEnumerable<object> items);
-    
+
     /// <summary>
     /// Update an item
     /// </summary>
     /// <param name="item">Item to update</param>
     void Update(object item);
-    
+
     /// <summary>
     /// Update a range of items
     /// </summary>
     /// <param name="items">Items to update</param>
     void UpdateRange(IEnumerable<object> items);
-    
+
     /// <summary>
     /// Remove an item
     /// </summary>
     /// <param name="item">Item to remove</param>
     void Remove(object item);
-    
+
     /// <summary>
     /// Remove items
     /// </summary>

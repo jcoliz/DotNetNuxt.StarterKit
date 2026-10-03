@@ -3,6 +3,9 @@ namespace DotNetNuxt.StarterKit.Entities.Abstractions;
 /// <summary>
 /// Identifies an object as a model stored in the database
 /// </summary>
+/// <remarks>
+/// Domain-agnostic. Could be broken out into separate reusable library.
+/// </remarks>
 public interface IModel
 {
     /// <summary>
