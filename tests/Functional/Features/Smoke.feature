@@ -14,3 +14,10 @@ Feature: Selected set of pages load successfully
     Scenario: Weather forecasts shown
         When user visits the Weather page
         Then 5 forecasts are visible
+
+    @explicit:wip
+    Scenario: App information shown
+        When user visits the About page
+        Then backend version is visible
+        And frontend version is visible
+        And both versions match

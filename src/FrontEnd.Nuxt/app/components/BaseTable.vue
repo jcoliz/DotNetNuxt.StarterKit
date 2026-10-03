@@ -3,11 +3,15 @@
  * Base styling for tables
  */
 
+const props = defineProps<{
+  testId?: string
+}>()
+
 const slots = useSlots()
 </script>
 
 <template>
-  <section data-test-id="Table">
+  <section :data-test-id="props.testId ?? 'base-table'">
     <table class="table">
       <thead v-if="slots.head">
         <slot name="head" />

@@ -42,7 +42,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <BaseTable data-test-id="Table">
+  <BaseTable test-id="app-version-table">
     <template #head>
       <tr>
         <th>Property</th>
@@ -56,13 +56,17 @@ onMounted(() => {
         <td>
           <BaseSpinner v-if="isLoading" />
           <span v-if="serviceUnavailable">Unavailable</span>
-          {{ serviceVersion }}
+          <span
+            v-if="serviceVersion"
+            data-test-id="service-version"
+            >{{ serviceVersion }}</span
+          >
         </td>
       </tr>
 
       <tr>
         <td>Front-End Version</td>
-        <td>{{ frontEndVersion }}</td>
+        <td data-test-id="front-end-version">{{ frontEndVersion }}</td>
       </tr>
     </template>
   </BaseTable>
