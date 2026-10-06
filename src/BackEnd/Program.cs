@@ -9,22 +9,17 @@ using Microsoft.Extensions.Logging;
 using DotNetNuxt.Hosting;
 using DotNetNuxt.Hosting.Options;
 using DotNetNuxt.Hosting.Logging;
+using static DotNetNuxt.Hosting.Logging.BootLoggerExtensions;
 
 ILogger? logger = default;
-ILoggerFactory? bootLoggerFactory = default;
 try
 {
     //
     // Set up Boot logger
     //
 
-    bootLoggerFactory = LoggerFactory.Create(builder =>
-    {
-        builder.SetMinimumLevel(LogLevel.Debug);
-        builder.AddTerseConsoleLogFormatter(options => options.IncludeScopes = false);
-        builder.AddConsole();
-    });
-    logger = bootLoggerFactory.CreateLogger("Boot");
+    logger = CreateStandardBootLogger();
+
     logger.LogInformation("Starting {App}", Assembly.GetExecutingAssembly().FullName);
 
     //
@@ -141,7 +136,6 @@ catch (Exception ex)
 }
 finally
 {
-    bootLoggerFactory?.Dispose();
 }
 
 
