@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using DotNetNuxt.Hosting;
 using DotNetNuxt.StarterKit.ServiceDefaults;
 using DotNetNuxt.Hosting.Options;
 
@@ -42,9 +43,8 @@ try
     // TODO: Add Key Vault config source, if configured
     // builder.Configuration.SetupAzureKeyVault(logger);
 
-    StartupOptions startupOptions = new();
-    builder.Configuration.Bind(StartupOptions.Section, startupOptions);
-    builder.Services.Configure<StartupOptions>(builder.Configuration.GetSection(StartupOptions.Section));
+    // Add the usual Startup options
+    StartupOptions startupOptions = builder.AddStandardStartupOptions();
 
     //
     // Add more services
