@@ -7,8 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using DotNetNuxt.Hosting;
-using DotNetNuxt.StarterKit.ServiceDefaults;
 using DotNetNuxt.Hosting.Options;
+using DotNetNuxt.Hosting.Logging;
 
 ILogger? logger = default;
 ILoggerFactory? bootLoggerFactory = default;
