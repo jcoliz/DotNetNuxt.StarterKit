@@ -19,7 +19,6 @@ try
     //
 
     logger = CreateStandardBootLogger();
-
     logger.LogInformation("Starting {App}", Assembly.GetExecutingAssembly().FullName);
 
     //
@@ -58,7 +57,7 @@ try
 
     builder.Services.AddSwagger();
 
-    builder.Services.AddCorsPolicy(startupOptions.AllowedCorsOrigins);
+    builder.Services.AddStandardCorsPolicy(startupOptions.AllowedCorsOrigins);
 
     var app = builder.Build();
 
