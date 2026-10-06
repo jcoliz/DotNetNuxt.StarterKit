@@ -9,6 +9,7 @@ COPY src/Data/Postgres/*.csproj src/Data/Postgres/
 COPY src/Entities/*.csproj src/Entities/
 COPY src/BackEnd/*.csproj src/BackEnd/
 COPY src/ServiceDefaults/*.csproj src/ServiceDefaults/
+COPY submodules/DotNetNuxt/src/Hosting/*.csproj submodules/DotNetNuxt/src/Hosting/
 RUN dotnet restore ./src/BackEnd/
 
 # Copy each source project
@@ -18,6 +19,7 @@ COPY src/Application/. src/Application/
 COPY src/Controllers/. src/Controllers/
 COPY src/BackEnd/. src/BackEnd/
 COPY src/ServiceDefaults/. src/ServiceDefaults/
+COPY submodules/DotNetNuxt/src/Hosting/. submodules/DotNetNuxt/src/Hosting/
 COPY docker/. docker/
 
 # Software version number

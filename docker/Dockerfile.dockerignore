@@ -10,7 +10,7 @@ docker/
 !docker/CONFIG.md 
 .azure/
 submodules/
-!submodules/NuxtIdentity/src/
+!submodules/DotNetNuxt/src/
 
 # Alternative host / frontend projects
 src/FrontEnd.Nuxt/
