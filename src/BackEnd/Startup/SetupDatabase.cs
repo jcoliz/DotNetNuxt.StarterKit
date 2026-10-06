@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using DotNetNuxt.StarterKit.Data;
-using DotNetNuxt.StarterKit.Entities.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,11 +32,9 @@ public static class __SetupDatabase
 
         builder.Services.AddDatabase(connectionString, builder.Environment, logger);
 
-        builder.Services.AddScoped<IDataProvider, ApplicationDbContext>();
-
         // Register database health check with "db" tag for the /health/db endpoint
         builder.Services.AddHealthChecks()
-            .AddCheck<DatabaseHealthCheck>("database", tags: ["db"]);
+            .AddDbContextCheck<ApplicationDbContext>("database", tags: ["db"]);
 
         return true;
     }

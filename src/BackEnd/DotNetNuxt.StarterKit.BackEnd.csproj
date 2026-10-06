@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="Alexinea.Extensions.Configuration.Toml" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
     <PackageReference Include="NSwag.AspNetCore" />
   </ItemGroup>
 

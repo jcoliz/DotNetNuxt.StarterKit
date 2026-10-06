@@ -143,7 +143,7 @@ Keep the aggregate [StartupOptions](../../src/BackEnd/Options/StartupOptions.cs)
 
 [ServiceDefaults](../../src/ServiceDefaults/Extensions.cs) combines reusable infrastructure with a starter-kit-specific tracing source pattern and health policy. Make application sources and health endpoint conventions configurable, or leave those choices in generated startup code.
 
-[DatabaseHealthCheck](../../src/BackEnd/Startup/DatabaseHealthCheck.cs) depends on a concrete application context. Generalize it over `DbContext`, or use existing EF health-check support. The application still decides registration, tags, routes, and whether database availability affects readiness.
+The backend now uses EF Core's built-in `AddDbContextCheck<ApplicationDbContext>()` support rather than a custom health-check type. If this behavior moves into a reusable library, keep it generalized over `DbContext`; the application should still decide registration, tags, routes, and whether database availability affects readiness.
 
 [AddApplicationFeatures](../../src/Application/Extensions.cs) should remain application-owned: its registration of `WeatherForecastFeature` changes as applications add features. A generally useful default such as `TimeProvider.System` does not justify packaging the application's feature registration method.
 
