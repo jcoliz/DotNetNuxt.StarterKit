@@ -16,4 +16,8 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\submodules\DotNetNuxt\src\Hosting\DotNetNuxt.Hosting.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -22,6 +22,12 @@
   <Folder Name="/src/ServiceDefaults/">
     <Project Path="src/ServiceDefaults/DotNetNuxt.StarterKit.ServiceDefaults.csproj" />
   </Folder>
+  <Folder Name="/submodules/" />
+  <Folder Name="/submodules/DotNetNuxt/" />
+  <Folder Name="/submodules/DotNetNuxt/src/" />
+  <Folder Name="/submodules/DotNetNuxt/src/Hosting/">
+    <Project Path="submodules/DotNetNuxt/src/Hosting/DotNetNuxt.Hosting.csproj" />
+  </Folder>
   <Folder Name="/tests/" />
   <Folder Name="/tests/Functional/">
     <Project Path="tests/Functional/DotNetNuxt.StarterKit.Tests.Functional.csproj" />
