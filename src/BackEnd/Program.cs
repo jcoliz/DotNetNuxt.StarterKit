@@ -10,6 +10,7 @@ using DotNetNuxt.Hosting;
 using DotNetNuxt.Hosting.Options;
 using DotNetNuxt.Hosting.Logging;
 using static DotNetNuxt.Hosting.Logging.BootLoggerExtensions;
+using static DotNetNuxt.Hosting.VersionHelpers;
 
 ILogger? logger = default;
 try
@@ -50,7 +51,8 @@ try
 
     builder.Logging.AddTerseConsoleLogFormatter(options => options.IncludeScopes = false);
 
-    var version = builder.GetVersion(logger);
+    var version = GetVersion(typeof(Program).Assembly);
+    logger.LogInformation("Application version: {Version}", version);
     builder.Services.AddWebApiServices(version);
 
     builder.Services.AddApplicationFeatures();
