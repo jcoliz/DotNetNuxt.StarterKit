@@ -13,8 +13,14 @@ public static class __SetupDatabase
     /// Add correct flavor of database depending on project configuration.
     /// Returns true if database was configured, false if no connection string was found.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <param name="logger"></param>
+    /// <remarks>
+    /// Domain-agnostic. Could be broken out into separate reusable library.
+    /// 
+    /// However, that reusable library takes EF Core as a dependency. So needs to be the database
+    /// library, not the hosting library.
+    /// </remarks>
+    /// <param name="builder">The WebApplicationBuilder used to configure services and the app.</param>
+    /// <param name="logger">The logger to use for logging database setup information.</param>
     /// <returns>True if database services were registered; false if no connection string was found</returns>
     public static bool SetupDatabase(this WebApplicationBuilder builder, ILogger logger)
     {
