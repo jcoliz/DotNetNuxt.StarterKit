@@ -1,3 +1,4 @@
+using DotNetNuxt.AspNetCore.Middleware;
 using DotNetNuxt.StarterKit.Controllers;
 using DotNetNuxt.StarterKit.Controllers.Attributes;
 using DotNetNuxt.StarterKit.Controllers.Middleware;
