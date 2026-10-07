@@ -61,7 +61,14 @@ export function useApiClient<T extends AuthorizedApiBase>(
   config?: Partial<IClientConfiguration>,
 ): T | SwallowingClient<T> {
   const runtimeConfig = useRuntimeConfig()
-  //TODO: const authFetch = useAuthFetch(config?.useTokenCheck !== false)
+  // Temporary SSR-safe HTTP client.
+  // NSwag-generated clients fall back to `window` when no HTTP client is supplied,
+  // which breaks during Nuxt prerender/static generation on the server.
+  // TODO below is the intended long-term solution once the composable is wired up.
+  //TODO: const httpClient = useAuthFetch(config?.useTokenCheck !== false)
+  const httpClient = {
+    fetch: (url: RequestInfo, init?: RequestInit): Promise<Response> => fetch(url, init),
+  }
 
   const defaultConfig: IClientConfiguration = {
     useTokenCheck: true,
@@ -71,6 +78,6 @@ export function useApiClient<T extends AuthorizedApiBase>(
   return new ClientClass(
     { ...defaultConfig, ...config },
     runtimeConfig.public.apiBaseUrl,
-    //authFetch,
+    httpClient,
   )
 }
