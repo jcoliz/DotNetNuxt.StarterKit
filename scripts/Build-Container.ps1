@@ -44,6 +44,3 @@ catch {
     Write-Error $_.ScriptStackTrace
     exit 1
 }
-finally {
-    Remove-Item env:SOLUTION_VERSION -ErrorAction SilentlyContinue
-}
