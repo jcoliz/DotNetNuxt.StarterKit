@@ -25,6 +25,9 @@
   <Folder Name="/submodules/" />
   <Folder Name="/submodules/DotNetNuxt/" />
   <Folder Name="/submodules/DotNetNuxt/src/" />
+  <Folder Name="/submodules/DotNetNuxt/src/AspNetCore/">
+    <Project Path="submodules/DotNetNuxt/src/AspNetCore/DotNetNuxt.AspNetCore.csproj" />
+  </Folder>
   <Folder Name="/submodules/DotNetNuxt/src/Hosting/">
     <Project Path="submodules/DotNetNuxt/src/Hosting/DotNetNuxt.Hosting.csproj" />
   </Folder>

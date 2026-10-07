@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\DotNetNuxt.StarterKit.Application.csproj" />
+    <ProjectReference Include="..\..\submodules\DotNetNuxt\src\AspNetCore\DotNetNuxt.AspNetCore.csproj" />
   </ItemGroup>
 
 </Project>
