@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Controllers\DotNetNuxt.StarterKit.Controllers.csproj" />
+    <ProjectReference Include="..\..\submodules\DotNetNuxt\src\AspNetCore\DotNetNuxt.AspNetCore.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -17,7 +18,7 @@
   </PropertyGroup>
   
   <Target Name="NSwag" AfterTargets="PostBuildEvent">
-    <Exec WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net100) run $(ProjectDir)\nswag.json /variables:Configuration=$(Configuration)"/>
+    <Exec WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net100) run $(ProjectDir)\nswag.json /variables:Configuration=$(Configuration)" />
   </Target>
 
 </Project>

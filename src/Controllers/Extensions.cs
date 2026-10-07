@@ -1,4 +1,5 @@
 using DotNetNuxt.AspNetCore.Middleware;
+using DotNetNuxt.AspNetCore.Options;
 using DotNetNuxt.StarterKit.Controllers;
 using DotNetNuxt.StarterKit.Controllers.Attributes;
 using DotNetNuxt.StarterKit.Controllers.Middleware;
