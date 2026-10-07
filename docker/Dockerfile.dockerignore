@@ -10,6 +10,8 @@ docker/
 !docker/CONFIG.md 
 .azure/
 submodules/
+!submodules/DotNetNuxt/
+!submodules/DotNettNuxt/Directory.Build.props
 !submodules/DotNetNuxt/src/
 
 # Alternative host / frontend projects

@@ -11,7 +11,6 @@ COPY src/BackEnd/*.csproj src/BackEnd/
 COPY src/ServiceDefaults/*.csproj src/ServiceDefaults/
 COPY submodules/DotNetNuxt/Directory.Build.props submodules/DotNetNuxt/
 COPY submodules/DotNetNuxt/src/Hosting/*.csproj submodules/DotNetNuxt/src/Hosting/
-COPY submodules/DotNetNuxt/src/Hosting/*.csproj submodules/DotNetNuxt/src/Hosting/
 COPY submodules/DotNetNuxt/src/AspNetCore/*.csproj submodules/DotNetNuxt/src/AspNetCore/
 RUN dotnet restore ./src/BackEnd/
 
