@@ -1,5 +1,3 @@
-using Aspire.Hosting;
-
 DotNetEnv.Env.Load();
 var builder = DistributedApplication.CreateBuilder(args);
 var appInsightsConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];

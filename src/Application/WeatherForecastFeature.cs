@@ -1,10 +1,6 @@
-﻿using DotNetNuxt.StarterKit.Entities.Models;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Diagnostics;
 using DotNetNuxt.Abstractions;
+using DotNetNuxt.StarterKit.Entities.Models;
 
 namespace DotNetNuxt.StarterKit.Application;
 

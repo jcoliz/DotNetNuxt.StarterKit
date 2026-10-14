@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using DotNetNuxt.StarterKit.Application;
 using DotNetNuxt.StarterKit.Controllers.Attributes;
 using DotNetNuxt.StarterKit.Entities.Models;

@@ -1,5 +1,4 @@
-﻿using System;
-using DotNetNuxt.StarterKit.Application;
+﻿using DotNetNuxt.StarterKit.Application;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

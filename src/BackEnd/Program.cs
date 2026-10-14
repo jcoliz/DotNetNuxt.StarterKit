@@ -1,14 +1,8 @@
-using System;
 using System.Reflection;
-using DotNetNuxt.StarterKit.BackEnd.Startup;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using DotNetNuxt.Hosting;
 using DotNetNuxt.Hosting.Options;
 using DotNetNuxt.Hosting.Logging;
+using DotNetNuxt.StarterKit.BackEnd.Startup;
 using static DotNetNuxt.Hosting.Logging.BootLoggerExtensions;
 using static DotNetNuxt.Hosting.VersionHelpers;
 

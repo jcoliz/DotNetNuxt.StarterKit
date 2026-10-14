@@ -1,7 +1,5 @@
-﻿using NSwag.Generation.Processors.Security;
-using NSwag;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
+﻿using NSwag;
+using NSwag.Generation.Processors.Security;
 
 namespace DotNetNuxt.StarterKit.BackEnd.Startup;
 
