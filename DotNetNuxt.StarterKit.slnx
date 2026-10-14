@@ -31,6 +31,9 @@
   <Folder Name="/submodules/DotNetNuxt/src/AspNetCore/">
     <Project Path="submodules/DotNetNuxt/src/AspNetCore/DotNetNuxt.AspNetCore.csproj" />
   </Folder>
+  <Folder Name="/submodules/DotNetNuxt/src/EntityFrameworkCore/">
+    <Project Path="submodules/DotNetNuxt/src/EntityFrameworkCore/DotNetNuxt.EntityFrameworkCore.csproj" />
+  </Folder>
   <Folder Name="/submodules/DotNetNuxt/src/Hosting/">
     <Project Path="submodules/DotNetNuxt/src/Hosting/DotNetNuxt.Hosting.csproj" />
   </Folder>

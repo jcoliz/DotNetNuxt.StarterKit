@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Entities\DotNetNuxt.StarterKit.Entities.csproj" />
+    <ProjectReference Include="..\..\..\submodules\DotNetNuxt\src\EntityFrameworkCore\DotNetNuxt.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
 </Project>
