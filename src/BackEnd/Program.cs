@@ -57,12 +57,7 @@ try
 
     var app = builder.Build();
 
-    // Boot logger, signing off!
-    logger.LogInformation("OK. Built {App}", Assembly.GetExecutingAssembly().FullName);
-
-    // Switch to the app's logger so post-build logs go through the full pipeline
-    // (OpenTelemetry, Azure Monitor, etc.) instead of just the startup console logger
-    logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
+    logger.LogInformation("Built {App}", Assembly.GetExecutingAssembly().FullName);
 
     try
     {
@@ -132,7 +127,3 @@ catch (Exception ex)
 finally
 {
 }
-
-
-// Exposes the entry point to WebApplicationFactory<Program> in integration tests
-public partial class Program;
