@@ -72,7 +72,7 @@ internal sealed class RequestTelemetryCapture : ILoggerProvider, ISupportExterna
             .Task.WaitAsync(TimeSpan.FromSeconds(10));
 
     /// <summary>
-    /// Creates a logger that captures metadata and scopes rather than formatting log messages.
+    /// Creates a logger that captures messages, exceptions, metadata, and scopes.
     /// </summary>
     /// <param name="categoryName">The category recorded with each log entry.</param>
     /// <returns>A logger writing to this helper's shared capture queue.</returns>
@@ -96,8 +96,11 @@ internal sealed class RequestTelemetryCapture : ILoggerProvider, ISupportExterna
     /// <param name="EventId">The event identifier used to select a particular log operation.</param>
     /// <param name="TraceId">The current activity's trace ID, or the default value when no activity exists.</param>
     /// <param name="Scope">A snapshot of structured scope values at the time the entry was logged.</param>
+    /// <param name="Level">The severity of the log entry.</param>
+    /// <param name="Message">The formatted log message.</param>
+    /// <param name="Exception">The original exception supplied to the logger, if any.</param>
     internal sealed record LogEntry(string Category, EventId EventId, ActivityTraceId TraceId,
-        IReadOnlyDictionary<string, object?> Scope);
+        IReadOnlyDictionary<string, object?> Scope, LogLevel Level, string Message, Exception? Exception);
 
     /// <summary>
     /// Copies active structured scopes into the capture queue when downstream code writes a log entry.
@@ -119,7 +122,6 @@ internal sealed class RequestTelemetryCapture : ILoggerProvider, ISupportExterna
         /// <remarks>
         /// Non-structured scopes are ignored. Inner scopes overwrite matching keys from outer scopes.
         /// Copying values now preserves them after the request's scopes have been disposed.
-        /// Message text, log state, and exceptions are not retained because assertions use metadata and scopes.
         /// </remarks>
         /// <inheritdoc/>
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state,
@@ -136,7 +138,8 @@ internal sealed class RequestTelemetryCapture : ILoggerProvider, ISupportExterna
                     }
                 }
             }, scopeValues);
-            capture.Logs.Enqueue(new(category, eventId, Activity.Current?.TraceId ?? default, scopeValues));
+            capture.Logs.Enqueue(new(category, eventId, Activity.Current?.TraceId ?? default, scopeValues,
+                logLevel, formatter(state, exception), exception));
         }
     }
 }
