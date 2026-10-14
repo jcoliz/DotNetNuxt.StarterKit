@@ -50,9 +50,18 @@ enables `Information` and higher for this output, including ASP.NET Core request
 logs, without changing production logging. Change its provider-specific filter
 to `LogLevel.Debug` for more detail. Messages include the category, severity,
 and exception details; their display depends on the test runner.
+The fixture enables `TestServer.PreserveExecutionContext` so request handlers
+retain NUnit's async-local test context. Without it, request logs written to
+`TestContext.Progress` can be missing even though startup logs are visible.
 
 The separate boot logger used during startup is outside the host logging pipeline
 and is not forwarded by this provider.
+
+[ExceptionLoggingTests](tests/Integration.Endpoints/ExceptionLoggingTests.cs) exercises
+the real endpoint test fixture with an injected failing data provider, so its
+request failure does not depend on database state. It verifies a safe HTTP 500
+Problem Details response, a single error log containing the original exception
+and stack trace, and preservation of NUnit's test context during the request.
 
 ## Architecture
 

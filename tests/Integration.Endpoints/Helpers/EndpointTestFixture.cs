@@ -29,6 +29,8 @@ public abstract class EndpointTestFixture
             });
             ConfigureWebHost(builder);
         });
+        // NUnit's immediate output needs the calling test's async-local context during requests.
+        _factory.Server.PreserveExecutionContext = true;
         Client = _factory.CreateClient();
     }
 

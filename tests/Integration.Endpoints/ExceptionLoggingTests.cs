@@ -4,59 +4,54 @@ using System.Net;
 using System.Text.Json;
 using DotNetNuxt.Abstractions;
 using DotNetNuxt.StarterKit.Application;
-using DotNetNuxt.StarterKit.Controllers;
 using DotNetNuxt.Tests.Integration.Endpoints.Helpers;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace DotNetNuxt.Tests.Integration.Endpoints;
 
 [TestFixture]
-public class ExceptionLoggingTests
+[NonParallelizable]
+public class ExceptionLoggingTests : EndpointTestFixture
 {
+    private readonly RequestTelemetryCapture _telemetry = new();
+    private readonly InvalidOperationException _exception = new("Simulated forecast query failure");
+    private FailingDataProvider _provider = null!;
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        _provider = new FailingDataProvider(_exception);
+        builder.ConfigureTestServices(services =>
+        {
+            services.RemoveAll<IDataProvider>();
+            services.AddSingleton<IDataProvider>(_provider);
+        });
+        builder.ConfigureLogging(logging =>
+        {
+            logging.AddProvider(_telemetry);
+            logging.AddFilter<RequestTelemetryCapture>(null, LogLevel.Information);
+        });
+    }
+
+    [OneTimeTearDown]
+    public void DisposeTelemetry() => _telemetry.Dispose();
+
     [Test]
     public async Task Weather_query_failure_returns_problem_details_and_logs_original_exception()
     {
-        var exception = new InvalidOperationException("Simulated forecast query failure");
-        using var telemetry = new RequestTelemetryCapture();
-        using var output = new StringWriter();
-        using var host = await new HostBuilder().ConfigureWebHost(builder => builder
-            .UseTestServer()
-            .ConfigureServices(services =>
-            {
-                services.AddWebApiServices("test")
-                    .AddApplicationPart(typeof(WeatherController).Assembly);
-                services.AddSingleton<IDataProvider>(new FailingDataProvider(exception));
-                services.AddSingleton(TimeProvider.System);
-                services.AddTransient<WeatherForecastFeature>();
-            })
-            .ConfigureLogging(logging =>
-            {
-                logging.AddProvider(telemetry);
-                logging.AddFilter<RequestTelemetryCapture>(null, LogLevel.Information);
-                logging.AddProvider(new NUnitLoggerProvider(TextWriter.Synchronized(output)));
-                logging.AddFilter<NUnitLoggerProvider>(null, LogLevel.Information);
-            })
-            .Configure(app =>
-            {
-                app.UseWebApiServices();
-                app.UseRouting();
-                app.UseEndpoints(endpoints => endpoints.MapControllers());
-            })).StartAsync();
-        using var client = host.GetTestClient();
+        var testId = TestContext.CurrentContext.Test.ID;
         var traceId = ActivityTraceId.CreateRandom();
         using var request = new HttpRequestMessage(HttpMethod.Get, "/api/weather?offset=0&count=5");
         request.Headers.Add("traceparent", $"00-{traceId}-{ActivitySpanId.CreateRandom()}-01");
 
-        using var response = await client.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         var body = await response.Content.ReadAsStringAsync();
-        await telemetry.WaitForServerTagsAsync(traceId);
-        var exceptionLogs = telemetry.Logs
-            .Where(entry => entry.TraceId == traceId && ReferenceEquals(entry.Exception, exception))
+        await _telemetry.WaitForServerTagsAsync(traceId);
+        var exceptionLogs = _telemetry.Logs
+            .Where(entry => entry.TraceId == traceId && ReferenceEquals(entry.Exception, _exception))
             .ToArray();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
@@ -65,22 +60,28 @@ public class ExceptionLoggingTests
         Assert.That(problem.RootElement.GetProperty("status").GetInt32(), Is.EqualTo(500));
         Assert.That(problem.RootElement.GetProperty("detail").GetString(),
             Is.EqualTo("Failed to fetch weather forecasts"));
-        Assert.That(body, Does.Not.Contain(exception.Message));
+        Assert.That(body, Does.Not.Contain(_exception.Message));
         Assert.That(exceptionLogs, Has.Length.EqualTo(1), "The original exception should be logged exactly once.");
         Assert.That(exceptionLogs[0].Level, Is.EqualTo(LogLevel.Error));
         Assert.That(exceptionLogs[0].Category,
             Is.EqualTo("Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware"));
         Assert.That(exceptionLogs[0].Message, Is.Not.Empty);
         Assert.That(exceptionLogs[0].Exception!.StackTrace, Does.Contain(nameof(WeatherForecastFeature.ListForecasts)));
-        Assert.That(output.ToString(), Does.Contain(exception.ToString()));
+        Assert.That(_provider.TestId, Is.EqualTo(testId),
+            "Request logging must retain NUnit's test context so TestContext.Progress reaches the runner.");
     }
 
     private sealed class FailingDataProvider(Exception exception) : IDataProvider
     {
+        public string? TestId { get; private set; }
+
         public IQueryable<T> Get<T>() where T : class, IModel => Array.Empty<T>().AsQueryable();
 
         public Task<List<T>> ToListNoTrackingAsync<T>(IQueryable<T> query) where T : class
-            => Task.FromException<List<T>>(exception);
+        {
+            TestId = TestContext.CurrentContext.Test.ID;
+            return Task.FromException<List<T>>(exception);
+        }
 
         public IQueryable<TEntity> GetIncluding<TEntity, TProperty>(
             Expression<Func<TEntity, TProperty>> navigationPropertyPath) where TEntity : class, IModel
