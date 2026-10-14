@@ -29,7 +29,7 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
             throw new ArgumentOutOfRangeException(nameof(count), count, "The sum of offset and count must not exceed 30.");
         }
 
-        using var activity = _activitySource.StartActivity(nameof(ListForecasts), ActivityKind.Server);
+        using var activity = _activitySource.StartActivity(nameof(ListForecasts));
 
         try
         {
@@ -58,7 +58,7 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
         }
         catch (Exception ex)
         {
-            activity?.AddException(ex);
+            activity?.MarkFailed(ex);
             throw;
         }
     }
@@ -81,7 +81,7 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
     /// <returns>Number of forecasts updated, added</returns>
     public async Task<(int, int)> UpdateForecasts(IEnumerable<WeatherForecast> incoming)
     {
-        using var activity = _activitySource.StartActivity(nameof(UpdateForecasts), ActivityKind.Server);
+        using var activity = _activitySource.StartActivity(nameof(UpdateForecasts));
 
         try
         {
@@ -126,8 +126,17 @@ public class WeatherForecastFeature(IDataProvider dataProvider, TimeProvider tim
         }
         catch (Exception ex)
         {
-            activity?.AddException(ex);
+            activity?.MarkFailed(ex);
             throw;
         }
+    }
+}
+
+internal static class ActivityExtensions
+{
+    public static void MarkFailed(this Activity? activity, Exception ex)
+    {
+        activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+        activity?.SetTag("error.type", ex.GetType().FullName);
     }
 }
