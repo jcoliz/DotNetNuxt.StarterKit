@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Logging;
 using Testcontainers.PostgreSql;
 
 namespace DotNetNuxt.Tests.Integration.Endpoints.Helpers;
@@ -19,7 +20,15 @@ public abstract class EndpointTestFixture
 
         Environment.SetEnvironmentVariable("ConnectionStrings__DefaultConnection", _postgres.GetConnectionString());
 
-        _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(ConfigureWebHost);
+        _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureLogging(logging =>
+            {
+                logging.AddProvider(new NUnitLoggerProvider(TestContext.Progress));
+                logging.AddFilter<NUnitLoggerProvider>(null, LogLevel.Information);
+            });
+            ConfigureWebHost(builder);
+        });
         Client = _factory.CreateClient();
     }
 

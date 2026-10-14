@@ -41,6 +41,19 @@ Start the local application:
 ./scripts/Start-AppHost.ps1
 ```
 
+## Integration Test Logs
+
+Endpoint integration tests forward the in-process server's host logs to NUnit's
+immediate output (`TestContext.Progress`). The shared
+[EndpointTestFixture](tests/Integration.Endpoints/Helpers/EndpointTestFixture.cs)
+enables `Information` and higher for this output, including ASP.NET Core request
+logs, without changing production logging. Change its provider-specific filter
+to `LogLevel.Debug` for more detail. Messages include the category, severity,
+and exception details; their display depends on the test runner.
+
+The separate boot logger used during startup is outside the host logging pipeline
+and is not forwarded by this provider.
+
 ## Architecture
 
 See [docs/adr/README.md](docs/adr/README.md) for summaries of the architecture decisions and links to each record.

@@ -59,6 +59,9 @@ try
 
     logger.LogInformation("Built {App}", Assembly.GetExecutingAssembly().FullName);
 
+    // Make a new logger which integration tests can tap into
+    logger = app.Services.GetRequiredService<ILogger<Program>>();
+
     try
     {
         await app.PrepareDatabaseAsync();
