@@ -1,4 +1,4 @@
-using DotNetNuxt.StarterKit.Entities.Abstractions;
+using DotNetNuxt.Abstractions;
 using DotNetNuxt.StarterKit.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using System;

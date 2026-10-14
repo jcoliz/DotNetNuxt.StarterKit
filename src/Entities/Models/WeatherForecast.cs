@@ -1,14 +1,14 @@
 ﻿using System;
-using DotNetNuxt.StarterKit.Entities.Abstractions;
+using DotNetNuxt.Abstractions;
 
 namespace DotNetNuxt.StarterKit.Entities.Models;
 
-public record WeatherForecast: IModel
+public record WeatherForecast : IModel
 {
     /// <summary>
     /// Database identifier
     /// </summary>
-    public int Id { get; init; }
+    public int Id { get; set; }
 
     /// <summary>
     /// UTC date & time at which forecast is applicable
@@ -18,7 +18,7 @@ public record WeatherForecast: IModel
     /// <summary>
     /// Forecasted temperature in F
     /// </summary>
-    public int TemperatureF {  get; init; }
+    public int TemperatureF { get; init; }
 
     /// <summary>
     /// Textual summary of the forecast

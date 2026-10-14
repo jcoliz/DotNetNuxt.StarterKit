@@ -4,8 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetNuxt.Abstractions;
 using DotNetNuxt.StarterKit.Application;
-using DotNetNuxt.StarterKit.Entities.Abstractions;
 using DotNetNuxt.StarterKit.Entities.Models;
 using Microsoft.Extensions.Time.Testing;
 

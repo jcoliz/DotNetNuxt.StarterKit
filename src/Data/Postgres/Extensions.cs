@@ -1,7 +1,7 @@
 using Azure.Core;
 using Azure.Identity;
+using DotNetNuxt.Abstractions;
 using DotNetNuxt.StarterKit.Data;
-using DotNetNuxt.StarterKit.Entities.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
