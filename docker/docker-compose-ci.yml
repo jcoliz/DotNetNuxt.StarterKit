@@ -1,4 +1,4 @@
-name: dnn_development_ci
+name: dotnetnuxt
 services: 
   dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:13
@@ -32,8 +32,7 @@ services:
         SOLUTION_VERSION: ${SOLUTION_VERSION}
     environment:
       - ASPNETCORE_ENVIRONMENT=Container
-      - USER__0__PASSWORD=${TESTPWORD}
-      - ConnectionStrings__DefaultConnection=Host=dnn_db;Database=db;Username=postgres;Password=development
+      - ConnectionStrings__DefaultConnection=Host=db;Database=db;Username=postgres;Password=development
       - STARTUP__ALLOWEDCORSORIGINS__0=http://localhost:5400
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://dashboard:18889
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
@@ -46,7 +45,6 @@ services:
         condition: service_healthy
   db:
     image: postgres:15.4-alpine
-    container_name: dnn_db
     restart: always
     environment:
       - POSTGRES_PASSWORD=development
