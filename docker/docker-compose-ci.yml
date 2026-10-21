@@ -18,7 +18,7 @@ services:
         - NUXT_PUBLIC_API_BASE_URL=http://localhost:5401
         - NUXT_PUBLIC_SOLUTION_VERSION=${SOLUTION_VERSION:-container}
         - NUXT_PUBLIC_APPLICATION_INSIGHTS_CONNECTION_STRING=${APPLICATIONINSIGHTS_CONNECTION_STRING:-}
-    restart: always
+    restart: unless-stopped
     ports:
       - '5400:80'
     depends_on:
@@ -37,7 +37,7 @@ services:
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://dashboard:18889
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
       - OTEL_SERVICE_NAME=backend
-    restart: always
+    restart: unless-stopped
     ports:
       - '5401:8080'
     depends_on:
@@ -45,7 +45,9 @@ services:
         condition: service_healthy
   db:
     image: postgres:15-alpine
-    restart: always
+    tmpfs:
+      - /var/lib/postgresql/data
+    restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD=development
       - POSTGRES_DB=db
