@@ -3,9 +3,7 @@ services:
   dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:13
     ports:
-      - '18888:18888'  # Dashboard UI
-      - '18889:18889'  # OTLP/gRPC endpoint
-      - '18890:18890'  # OTLP/HTTP endpoint
+      - '18988:18888'  # Dashboard UI
     environment:
       - DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS=true
     restart: unless-stopped

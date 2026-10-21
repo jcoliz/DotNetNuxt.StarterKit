@@ -69,7 +69,7 @@ try {
     if (-not $NoBrowser) {
         Write-Host ""
         Write-Host "Opening application and dashboard..." -ForegroundColor Cyan
-        Start-Process "http://localhost:18888"
+        Start-Process "http://localhost:18988"
         Start-Process "http://localhost:5401/swagger"
         Start-Process "http://localhost:5400"
     }
