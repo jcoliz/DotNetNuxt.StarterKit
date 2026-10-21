@@ -93,15 +93,67 @@ public class ExceptionLoggingTests : EndpointTestFixture
         public void UpdateRange(IEnumerable<object> items) => throw new NotSupportedException();
         public void Remove(object item) => throw new NotSupportedException();
         public void RemoveRange(IEnumerable<object> items) => throw new NotSupportedException();
-        public Task<int> ClearAsync<T>() where T : IModel => throw new NotSupportedException();
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
             => throw new NotSupportedException();
         public Task<List<T>> ToListAsync<T>(IQueryable<T> query) => throw new NotSupportedException();
-        public Task<int> CountAsync<T>(IQueryable<T> query) where T : IModel => throw new NotSupportedException();
-        public Task<bool> AnyAsync<T>(IQueryable<T> query) where T : IModel => throw new NotSupportedException();
         public Task BulkInsertAsync<T>(IList<T> items) where T : IModel => throw new NotSupportedException();
         public Task<int> BulkDeleteAsync<T>(IQueryable<T> items) where T : IModel => throw new NotSupportedException();
         public Task<int> BulkUpdateAsync<T>(IQueryable<T> items, T newValues, List<string> columns) where T : IModel
             => throw new NotSupportedException();
+
+        public void Add(IModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddRange(IEnumerable<IModel> items)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(IModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateRange(IEnumerable<IModel> items)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Remove(IModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveRange(IEnumerable<IModel> items)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T?> SingleOrDefaultAsync<T>(IQueryable<T> query) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> BulkUpdateAsync<TEntity, TProperty>(IQueryable<TEntity> query, Expression<Func<TEntity, TProperty>> propertySelector, TProperty newValue, CancellationToken cancellationToken) where TEntity : IModel
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<int> IDataProvider.ClearAsync<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> CountAsync<T>(IQueryable<T> query)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> AnyAsync<T>(IQueryable<T> query)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

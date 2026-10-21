@@ -159,11 +159,11 @@ public class WeatherForecastFeatureTests
         public IQueryable<TEntity> Get<TEntity>() where TEntity : class, IModel
             => forecasts.OfType<TEntity>().AsQueryable();
 
-        public void Add(object item) => Added.Add((WeatherForecast)item);
+        public void Add(IModel item) => Added.Add((WeatherForecast)item);
 
-        public void AddRange(IEnumerable<object> items) => Added.AddRange(items.Cast<WeatherForecast>());
+        public void AddRange(IEnumerable<IModel> items) => Added.AddRange(items.Cast<WeatherForecast>());
 
-        public void UpdateRange(IEnumerable<object> items) => Updated.AddRange(items.Cast<WeatherForecast>());
+        public void UpdateRange(IEnumerable<IModel> items) => Updated.AddRange(items.Cast<WeatherForecast>());
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -182,7 +182,7 @@ public class WeatherForecastFeatureTests
             throw new NotImplementedException();
         }
 
-        public void Update(object item)
+        public void Update(IModel item)
         {
             throw new NotImplementedException();
         }
@@ -197,17 +197,17 @@ public class WeatherForecastFeatureTests
             throw new NotImplementedException();
         }
 
-        public Task<int> ClearAsync<T>() where T : IModel
+        Task<int> IDataProvider.ClearAsync<T>()
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync<T>(IQueryable<T> query) where T : IModel
+        Task<int> IDataProvider.CountAsync<T>(IQueryable<T> query)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> AnyAsync<T>(IQueryable<T> query) where T : IModel
+        Task<bool> IDataProvider.AnyAsync<T>(IQueryable<T> query)
         {
             throw new NotImplementedException();
         }
@@ -223,6 +223,27 @@ public class WeatherForecastFeatureTests
         }
 
         public Task<int> BulkUpdateAsync<T>(IQueryable<T> items, T newValues, List<string> columns) where T : IModel
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void Remove(IModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveRange(IEnumerable<IModel> items)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T?> SingleOrDefaultAsync<T>(IQueryable<T> query) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> BulkUpdateAsync<TEntity, TProperty>(IQueryable<TEntity> query, Expression<Func<TEntity, TProperty>> propertySelector, TProperty newValue, CancellationToken cancellationToken) where TEntity : IModel
         {
             throw new NotImplementedException();
         }

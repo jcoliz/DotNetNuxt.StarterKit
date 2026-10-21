@@ -40,12 +40,4 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     }
 
     #endregion
-
-    #region Bulk Operations
-
-    /// <inheritdoc/>
-    public override Task<int> BulkUpdateAsync<T>(IQueryable<T> items, T newValues, List<string> columns)
-        => throw new NotImplementedException();
-
-    #endregion
 }
