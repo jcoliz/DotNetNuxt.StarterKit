@@ -56,7 +56,7 @@ jobs:
       run: ./scripts/Stop-Container.ps1
     - name: Upload Docker Logs
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: docker-logs
         path: artifacts/docker.log
@@ -71,7 +71,7 @@ jobs:
         list-tests: all
     - name: Upload Test Results
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: test-results
         path: artifacts/test-results/
