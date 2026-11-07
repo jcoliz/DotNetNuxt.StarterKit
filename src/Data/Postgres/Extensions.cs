@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 /// Extension methods to register the Postgres <see cref="ApplicationDbContext"/>
 /// and handle environment-aware migration.
 /// </summary>
-public static class DatabaseServiceExtensions
+public static partial class DatabaseServiceExtensions
 {
     /// <summary>
     /// Register <see cref="ApplicationDbContext"/> with the Npgsql provider.
@@ -28,36 +28,43 @@ public static class DatabaseServiceExtensions
     {
         if (environment.IsProduction())
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
-            dataSourceBuilder.UsePeriodicPasswordProvider(async (_, ct) =>
-            {
-                try
-                {
-                    logger.LogDebug("Refreshing Entra managed identity token for PostgreSQL");
-                    var credential = new ManagedIdentityCredential(ManagedIdentityId.SystemAssigned);
-                    var token = await credential.GetTokenAsync(
-                        new TokenRequestContext(
-                            ["https://ossrdbms-aad.database.windows.net/.default"]), ct);
-                    logger.LogDebug("Entra token refreshed, expires at {ExpiresOn}", token.ExpiresOn);
-                    return token.Token;
-                }
-                catch (Exception ex)
-                {
-                    logger.LogWarning(ex, "Failed to refresh Entra managed identity token for PostgreSQL");
-                    throw;
-                }
-            }, TimeSpan.FromMinutes(20), TimeSpan.FromSeconds(10));
+            services.AddSingleton(
+                _ => new ManagedIdentityCredential(ManagedIdentityId.SystemAssigned));
 
-            var dataSource = dataSourceBuilder.Build();
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(dataSource));
-            logger.LogInformation("Using Postgres with Entra managed identity auth");
+            services.AddSingleton(serviceProvider =>
+            {
+                var credential = serviceProvider.GetRequiredService<ManagedIdentityCredential>();
+                var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+                dataSourceBuilder.UsePeriodicPasswordProvider(async (_, ct) =>
+                {
+                    try
+                    {
+                        LogRefreshingEntraToken(logger);
+                        var token = await credential.GetTokenAsync(
+                            new TokenRequestContext(
+                                ["https://ossrdbms-aad.database.windows.net/.default"]), ct);
+                        LogEntraTokenRefreshed(logger, token.ExpiresOn);
+                        return token.Token;
+                    }
+                    catch (Exception ex)
+                    {
+                        LogFailedToRefreshEntraToken(logger, ex);
+                        throw;
+                    }
+                }, TimeSpan.FromMinutes(20), TimeSpan.FromSeconds(10));
+
+                return dataSourceBuilder.Build();
+            });
+
+            services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
+                options.UseNpgsql(serviceProvider.GetRequiredService<NpgsqlDataSource>()));
+            LogUsingEntraAuth(logger);
         }
         else
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(connectionString));
-            logger.LogInformation("Using Postgres with connection string auth");
+            LogUsingConnectionStringAuth(logger);
         }
 
         // Expose the context through the storage-agnostic abstraction,
@@ -82,4 +89,19 @@ public static class DatabaseServiceExtensions
             db.Database.Migrate();
         }
     }
+
+    [LoggerMessage(1, LogLevel.Debug, "Refreshing Entra managed identity token for PostgreSQL")]
+    private static partial void LogRefreshingEntraToken(ILogger logger);
+
+    [LoggerMessage(2, LogLevel.Debug, "Entra token refreshed, expires at {ExpiresOn}")]
+    private static partial void LogEntraTokenRefreshed(ILogger logger, DateTimeOffset expiresOn);
+
+    [LoggerMessage(3, LogLevel.Warning, "Failed to refresh Entra managed identity token for PostgreSQL")]
+    private static partial void LogFailedToRefreshEntraToken(ILogger logger, Exception ex);
+
+    [LoggerMessage(4, LogLevel.Information, "Using Postgres with Entra managed identity auth")]
+    private static partial void LogUsingEntraAuth(ILogger logger);
+
+    [LoggerMessage(5, LogLevel.Information, "Using Postgres with connection string auth")]
+    private static partial void LogUsingConnectionStringAuth(ILogger logger);
 }
